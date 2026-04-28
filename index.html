@@ -1,11 +1,631 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="id">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>SmartBank - Core Banking System</title>
+    
+    <!-- Google Fonts: Outfit -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <style>
+        :root {
+            /* Color Palette */
+            --bg-dark: #0a0e17;
+            --glass-bg: rgba(20, 27, 45, 0.6);
+            --glass-border: rgba(255, 255, 255, 0.08);
+            --primary: #00f2fe;
+            --primary-glow: rgba(0, 242, 254, 0.4);
+            --secondary: #4facfe;
+            --text-main: #ffffff;
+            --text-muted: #94a3b8;
+            --success: #10b981;
+            --danger: #ef4444;
+            --warning: #f59e0b;
+            
+            /* Glassmorphism utilities */
+            --blur: blur(12px);
+            --shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Outfit', sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-dark);
+            color: var(--text-main);
+            min-height: 100vh;
+            display: flex;
+            background-image: 
+                radial-gradient(circle at 15% 50%, rgba(0, 242, 254, 0.08) 0%, transparent 50%),
+                radial-gradient(circle at 85% 30%, rgba(79, 172, 254, 0.08) 0%, transparent 50%);
+            overflow-x: hidden;
+        }
+
+        /* Sidebar Styling */
+        .sidebar {
+            width: 260px;
+            background: var(--glass-bg);
+            backdrop-filter: var(--blur);
+            -webkit-backdrop-filter: var(--blur);
+            border-right: 1px solid var(--glass-border);
+            padding: 2rem 1.5rem;
+            display: flex;
+            flex-direction: column;
+            gap: 2.5rem;
+            position: fixed;
+            height: 100vh;
+            z-index: 10;
+        }
+
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--text-main);
+            text-decoration: none;
+            letter-spacing: 0.5px;
+        }
+
+        .brand i {
+            color: var(--primary);
+            font-size: 1.8rem;
+            filter: drop-shadow(0 0 8px var(--primary-glow));
+        }
+
+        .nav-links {
+            list-style: none;
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .nav-item {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 1rem 1.25rem;
+            border-radius: 12px;
+            color: var(--text-muted);
+            text-decoration: none;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .nav-item:hover, .nav-item.active {
+            color: var(--text-main);
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        .nav-item.active::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            height: 100%;
+            width: 4px;
+            background: linear-gradient(180deg, var(--primary) 0%, var(--secondary) 100%);
+            border-radius: 0 4px 4px 0;
+        }
+
+        .nav-item i {
+            font-size: 1.2rem;
+            width: 24px;
+            text-align: center;
+        }
+
+        /* Main Content */
+        .main-content {
+            margin-left: 260px;
+            padding: 2rem 3rem;
+            width: calc(100% - 260px);
+            display: flex;
+            flex-direction: column;
+            gap: 2rem;
+        }
+
+        /* Header */
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid var(--glass-border);
+        }
+
+        .header-title h1 {
+            font-size: 1.8rem;
+            font-weight: 600;
+        }
+
+        .header-title p {
+            color: var(--text-muted);
+            font-size: 0.95rem;
+            margin-top: 0.25rem;
+        }
+
+        .user-profile {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            background: var(--glass-bg);
+            backdrop-filter: var(--blur);
+            border: 1px solid var(--glass-border);
+            padding: 0.5rem 1rem;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .user-profile:hover {
+            border-color: rgba(255, 255, 255, 0.2);
+            box-shadow: var(--shadow);
+        }
+
+        .avatar {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+        }
+
+        /* Cards Grid */
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1.5rem;
+        }
+
+        /* Glass Card Utility */
+        .glass-card {
+            background: var(--glass-bg);
+            backdrop-filter: var(--blur);
+            -webkit-backdrop-filter: var(--blur);
+            border: 1px solid var(--glass-border);
+            border-radius: 20px;
+            padding: 1.5rem;
+            box-shadow: var(--shadow);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .glass-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 12px 40px 0 rgba(0, 0, 0, 0.45);
+        }
+
+        /* Balance Card Specifics */
+        .balance-card {
+            position: relative;
+            overflow: hidden;
+        }
+
+        .balance-card::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -20%;
+            width: 200px;
+            height: 200px;
+            background: var(--primary);
+            filter: blur(80px);
+            opacity: 0.2;
+            border-radius: 50%;
+        }
+
+        .card-label {
+            color: var(--text-muted);
+            font-size: 0.9rem;
+            font-weight: 500;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .balance-amount {
+            font-size: 2.8rem;
+            font-weight: 700;
+            margin: 1rem 0;
+            background: linear-gradient(to right, #fff, #bce4ff);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .account-info {
+            display: flex;
+            gap: 1.5rem;
+            color: var(--text-muted);
+            font-size: 0.9rem;
+        }
+        
+        .account-info span strong {
+            color: var(--text-main);
+            font-weight: 500;
+        }
+
+        /* Quick Actions */
+        .quick-actions-card .actions-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+
+        .action-btn {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid var(--glass-border);
+            border-radius: 12px;
+            padding: 1rem;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0.75rem;
+            color: var(--text-main);
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .action-btn i {
+            font-size: 1.5rem;
+            color: var(--primary);
+            transition: transform 0.3s ease;
+        }
+
+        .action-btn:hover {
+            background: rgba(255, 255, 255, 0.08);
+            border-color: var(--primary);
+        }
+
+        .action-btn:hover i {
+            transform: scale(1.1);
+        }
+
+        /* Ledger Table */
+        .ledger-section {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .view-all {
+            color: var(--primary);
+            text-decoration: none;
+            font-size: 0.9rem;
+            font-weight: 500;
+            transition: color 0.3s ease;
+        }
+
+        .view-all:hover {
+            color: #fff;
+        }
+
+        .table-container {
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: separate;
+            border-spacing: 0 0.5rem;
+        }
+
+        th {
+            text-align: left;
+            color: var(--text-muted);
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            padding: 1rem;
+            border-bottom: 1px solid var(--glass-border);
+        }
+
+        td {
+            padding: 1rem;
+            background: rgba(255, 255, 255, 0.02);
+            font-size: 0.95rem;
+        }
+
+        tr td:first-child {
+            border-top-left-radius: 10px;
+            border-bottom-left-radius: 10px;
+        }
+
+        tr td:last-child {
+            border-top-right-radius: 10px;
+            border-bottom-right-radius: 10px;
+        }
+
+        tr:hover td {
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        .tx-icon {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.8rem;
+        }
+
+        .tx-in { background: rgba(16, 185, 129, 0.2); color: var(--success); }
+        .tx-out { background: rgba(239, 68, 68, 0.2); color: var(--danger); }
+        .tx-fee { background: rgba(245, 158, 11, 0.2); color: var(--warning); }
+
+        .tx-details {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .tx-title {
+            font-weight: 500;
+        }
+
+        .tx-subtitle {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+        }
+
+        .status {
+            padding: 0.25rem 0.75rem;
+            border-radius: 50px;
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+
+        .status.success { background: rgba(16, 185, 129, 0.1); color: var(--success); border: 1px solid rgba(16, 185, 129, 0.3); }
+        .status.pending { background: rgba(245, 158, 11, 0.1); color: var(--warning); border: 1px solid rgba(245, 158, 11, 0.3); }
+
+        .amount-in { color: var(--success); font-weight: 600; }
+        .amount-out { color: var(--danger); font-weight: 600; }
+
+        /* Responsive */
+        @media (max-width: 1024px) {
+            .dashboard-grid { grid-template-columns: 1fr; }
+        }
+
+        @media (max-width: 768px) {
+            .sidebar { transform: translateX(-100%); }
+            .main-content { margin-left: 0; width: 100%; padding: 1.5rem; }
+        }
+    </style>
 </head>
 <body>
-    <h1>Hello World</h1>
+
+    <!-- Sidebar Navigation -->
+    <aside class="sidebar">
+        <a href="#" class="brand">
+            <i class="fa-solid fa-building-columns"></i>
+            SmartBank
+        </a>
+        <ul class="nav-links">
+            <li><a href="#" class="nav-item active"><i class="fa-solid fa-chart-pie"></i> Dashboard</a></li>
+            <li><a href="#" class="nav-item"><i class="fa-solid fa-money-bill-transfer"></i> Transfer Dana</a></li>
+            <li><a href="#" class="nav-item"><i class="fa-solid fa-hand-holding-dollar"></i> Pinjaman</a></li>
+            <li><a href="#" class="nav-item"><i class="fa-solid fa-file-invoice"></i> Ledger Transaksi</a></li>
+            <li><a href="#" class="nav-item"><i class="fa-solid fa-chart-line"></i> UMKM Insight</a></li>
+            <li style="margin-top: 2rem;"><a href="#" class="nav-item"><i class="fa-solid fa-gear"></i> Pengaturan</a></li>
+            <li><a href="#" class="nav-item" style="color: var(--danger);"><i class="fa-solid fa-arrow-right-from-bracket"></i> Keluar</a></li>
+        </ul>
+    </aside>
+
+    <!-- Main Content Area -->
+    <main class="main-content">
+        
+        <!-- Header -->
+        <header>
+            <div class="header-title">
+                <h1>Overview Ekosistem</h1>
+                <p>Pantau seluruh aktivitas keuangan dari single source of truth.</p>
+            </div>
+            <div class="user-profile">
+                <div class="avatar">A</div>
+                <div class="user-info">
+                    <span style="font-weight: 500; font-size: 0.95rem;">Admin Pusat</span>
+                </div>
+                <i class="fa-solid fa-chevron-down" style="color: var(--text-muted); font-size: 0.8rem;"></i>
+            </div>
+        </header>
+
+        <!-- Top Cards Grid -->
+        <section class="dashboard-grid">
+            
+            <!-- Balance Card -->
+            <div class="glass-card balance-card">
+                <div class="card-label">
+                    <span>Total Saldo Ekosistem</span>
+                    <i class="fa-solid fa-wallet"></i>
+                </div>
+                <div class="balance-amount">
+                    Rp 1.000.000.000
+                </div>
+                <div class="account-info">
+                    <span>Account ID: <strong>SB-CORE-001</strong></span>
+                    <span>Status: <strong style="color: var(--success);">Active</strong></span>
+                </div>
+            </div>
+
+            <!-- Quick Actions -->
+            <div class="glass-card quick-actions-card">
+                <div class="card-label">Aksi Cepat</div>
+                <div class="actions-grid">
+                    <button class="action-btn">
+                        <i class="fa-solid fa-paper-plane"></i>
+                        <span>Kirim Dana</span>
+                    </button>
+                    <button class="action-btn">
+                        <i class="fa-solid fa-building-circle-check"></i>
+                        <span>Validasi Loan</span>
+                    </button>
+                    <button class="action-btn">
+                        <i class="fa-solid fa-receipt"></i>
+                        <span>Tarik Fee</span>
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <!-- Ledger Table -->
+        <section class="ledger-section">
+            <div class="section-header">
+                <h2>Riwayat Ledger Terbaru</h2>
+                <a href="#" class="view-all">Lihat Semua <i class="fa-solid fa-arrow-right"></i></a>
+            </div>
+            
+            <div class="glass-card table-container">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Transaksi</th>
+                            <th>Tanggal & Waktu</th>
+                            <th>Aplikasi Asal</th>
+                            <th>Status</th>
+                            <th>Jumlah</th>
+                        </tr>
+                    </thead>
+                    <tbody id="ledger-body">
+                        <!-- Data akan di-render oleh JavaScript -->
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+    </main>
+
+    <script>
+        // Data Mockup untuk Ledger Transaksi
+        const transactions = [
+            {
+                id: "TRX-001",
+                title: "Pembayaran Checkout",
+                subtitle: "User: USR-092",
+                type: "in",
+                date: "28 Apr 2026, 14:30",
+                source: "Marketplace",
+                status: "success",
+                amount: "+ Rp 150.000"
+            },
+            {
+                id: "TRX-002",
+                title: "Potongan Fee Marketplace",
+                subtitle: "Tax/Fee (2%)",
+                type: "fee",
+                date: "28 Apr 2026, 14:30",
+                source: "SmartBank",
+                status: "success",
+                amount: "- Rp 3.000"
+            },
+            {
+                id: "TRX-003",
+                title: "Pembayaran Supplier",
+                subtitle: "Pembelian Bahan Baku",
+                type: "out",
+                date: "28 Apr 2026, 11:15",
+                source: "SupplierHub",
+                status: "success",
+                amount: "- Rp 500.000"
+            },
+            {
+                id: "TRX-004",
+                title: "Pembayaran Kasir Offline",
+                subtitle: "Cabang: WarungPOS-1",
+                type: "in",
+                date: "28 Apr 2026, 09:45",
+                source: "POS",
+                status: "success",
+                amount: "+ Rp 45.000"
+            },
+            {
+                id: "TRX-005",
+                title: "Pengajuan Pinjaman UMKM",
+                subtitle: "User: USR-105",
+                type: "out",
+                date: "27 Apr 2026, 16:20",
+                source: "SmartBank",
+                status: "pending",
+                amount: "- Rp 5.000.000"
+            }
+        ];
+
+        // Render Data ke Table
+        const tbody = document.getElementById('ledger-body');
+        
+        function getIconClass(type) {
+            if(type === 'in') return '<div class="tx-icon tx-in"><i class="fa-solid fa-arrow-down"></i></div>';
+            if(type === 'out') return '<div class="tx-icon tx-out"><i class="fa-solid fa-arrow-up"></i></div>';
+            return '<div class="tx-icon tx-fee"><i class="fa-solid fa-percent"></i></div>';
+        }
+
+        function getAmountClass(type) {
+            if(type === 'in') return 'amount-in';
+            return 'amount-out';
+        }
+
+        function getStatusLabel(status) {
+            if(status === 'success') return '<span class="status success">Berhasil</span>';
+            return '<span class="status pending">Tertunda</span>';
+        }
+
+        transactions.forEach(tx => {
+            const tr = document.createElement('tr');
+            tr.innerHTML = `
+                <td>
+                    <div class="tx-details">
+                        ${getIconClass(tx.type)}
+                        <div>
+                            <div class="tx-title">${tx.title}</div>
+                            <div class="tx-subtitle">${tx.id} • ${tx.subtitle}</div>
+                        </div>
+                    </div>
+                </td>
+                <td style="color: var(--text-muted); font-size: 0.9rem;">${tx.date}</td>
+                <td>
+                    <span style="background: rgba(255,255,255,0.1); padding: 4px 10px; border-radius: 6px; font-size: 0.85rem;">
+                        ${tx.source}
+                    </span>
+                </td>
+                <td>${getStatusLabel(tx.status)}</td>
+                <td class="${getAmountClass(tx.type)}">${tx.amount}</td>
+            `;
+            tbody.appendChild(tr);
+        });
+
+        // Interaksi Hover Tombol Sederhana
+        const actionBtns = document.querySelectorAll('.action-btn');
+        actionBtns.forEach(btn => {
+            btn.addEventListener('click', () => {
+                const icon = btn.querySelector('i');
+                icon.style.transform = 'scale(0.8)';
+                setTimeout(() => {
+                    icon.style.transform = 'scale(1)';
+                }, 150);
+            });
+        });
+    </script>
 </body>
 </html>
