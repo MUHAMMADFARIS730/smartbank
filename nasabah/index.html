@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html lang="id" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SmartBank - Aplikasi Nasabah</title>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <div class="app-container">
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <div class="logo">
+                <div class="logo-icon"><i class="fas fa-university"></i></div>
+                <h2>SmartBank</h2>
+            </div>
+            <nav class="nav-menu">
+                <a href="#" class="nav-item active" data-target="dashboard">
+                    <i class="fas fa-home"></i> Beranda
+                </a>
+                <a href="#" class="nav-item" data-target="transfer">
+                    <i class="fas fa-exchange-alt"></i> Transfer
+                </a>
+                <a href="#" class="nav-item" data-target="qris">
+                    <i class="fas fa-qrcode"></i> QRIS
+                </a>
+                <a href="#" class="nav-item" data-target="topup">
+                    <i class="fas fa-wallet"></i> Top Up
+                </a>
+                <a href="#" class="nav-item" data-target="tagihan">
+                    <i class="fas fa-file-invoice-dollar"></i> Tagihan
+                </a>
+                <a href="#" class="nav-item" data-target="history">
+                    <i class="fas fa-history"></i> Riwayat Transaksi
+                </a>
+            </nav>
+            <div class="sidebar-footer">
+                <button class="logout-btn"><i class="fas fa-sign-out-alt"></i> Keluar</button>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Header -->
+            <header class="topbar">
+                <div class="search-bar">
+                    <i class="fas fa-search"></i>
+                    <input type="text" placeholder="Cari transaksi atau menu...">
+                </div>
+                <div class="user-profile">
+                    <div class="notification"><i class="fas fa-bell"></i><span class="badge">2</span></div>
+                    <div class="profile-info">
+                        <span class="name">Budi Santoso</span>
+                        <span class="role">Premium Member</span>
+                    </div>
+                    <img src="https://ui-avatars.com/api/?name=Budi+Santoso&background=3B82F6&color=fff" alt="Profile">
+                </div>
+            </header>
+
+            <!-- Dashboard View -->
+            <section id="dashboard" class="view-section active">
+                <div class="page-header">
+                    <h1>Ringkasan Akun</h1>
+                    <p>Selamat datang kembali, Budi.</p>
+                </div>
+                
+                <div class="cards-grid">
+                    <div class="balance-card glass-panel">
+                        <div class="card-glow"></div>
+                        <div class="balance-header">
+                            <h3>Total Saldo</h3>
+                            <i class="fas fa-eye"></i>
+                        </div>
+                        <div class="amount">Rp 12.500.000</div>
+                        <div class="card-footer">
+                            <span class="trend positive"><i class="fas fa-arrow-up"></i> +2.5% bulan ini</span>
+                            <div class="card-number">**** **** **** 8890</div>
+                        </div>
+                    </div>
+
+                    <!-- Quick actions -->
+                    <div class="action-cards">
+                        <div class="action-card action-trigger" data-target="transfer">
+                            <div class="icon-circle bg-blue"><i class="fas fa-paper-plane"></i></div>
+                            <span>Transfer</span>
+                        </div>
+                        <div class="action-card action-trigger" data-target="qris">
+                            <div class="icon-circle bg-purple"><i class="fas fa-qrcode"></i></div>
+                            <span>QRIS</span>
+                        </div>
+                        <div class="action-card action-trigger" data-target="topup">
+                            <div class="icon-circle bg-green"><i class="fas fa-wallet"></i></div>
+                            <span>Top Up</span>
+                        </div>
+                        <div class="action-card action-trigger" data-target="tagihan">
+                            <div class="icon-circle bg-orange"><i class="fas fa-file-invoice-dollar"></i></div>
+                            <span>Tagihan</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="recent-transactions glass-panel">
+                    <div class="section-header">
+                        <h2>Transaksi Terakhir</h2>
+                        <a href="#" class="action-trigger" data-target="history">Lihat Semua</a>
+                    </div>
+                    <div class="transaction-list">
+                        <div class="transaction-item">
+                            <div class="tx-info">
+                                <div class="tx-icon transfer-out"><i class="fas fa-arrow-right"></i></div>
+                                <div>
+                                    <h4>Transfer ke Ahmad</h4>
+                                    <span class="date">Hari ini, 10:30</span>
+                                </div>
+                            </div>
+                            <div class="tx-amount negative">- Rp 500.000</div>
+                        </div>
+                        <div class="transaction-item">
+                            <div class="tx-info">
+                                <div class="tx-icon transfer-in"><i class="fas fa-arrow-left"></i></div>
+                                <div>
+                                    <h4>Penerimaan Gaji</h4>
+                                    <span class="date">Kemarin, 09:00</span>
+                                </div>
+                            </div>
+                            <div class="tx-amount positive">+ Rp 10.000.000</div>
+                        </div>
+                        <div class="transaction-item">
+                            <div class="tx-info">
+                                <div class="tx-icon payment"><i class="fas fa-shopping-cart"></i></div>
+                                <div>
+                                    <h4>Tokopedia</h4>
+                                    <span class="date">27 Apr 2026, 14:20</span>
+                                </div>
+                            </div>
+                            <div class="tx-amount negative">- Rp 350.000</div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Transfer View -->
+            <section id="transfer" class="view-section">
+                <div class="page-header">
+                    <h1>Transfer Dana</h1>
+                    <p>Kirim uang dengan aman dan cepat.</p>
+                </div>
+                <div class="form-container glass-panel">
+                    <div class="tabs">
+                        <div class="tab active">Sesama SmartBank</div>
+                        <div class="tab">Bank Lain</div>
+                    </div>
+                    <form class="action-form">
+                        <div class="form-group">
+                            <label>Rekening Tujuan</label>
+                            <input type="text" placeholder="Contoh: 1234567890">
+                        </div>
+                        <div class="form-group">
+                            <label>Jumlah Transfer</label>
+                            <div class="input-prefix">
+                                <span>Rp</span>
+                                <input type="number" placeholder="0">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label>Catatan (Opsional)</label>
+                            <input type="text" placeholder="Berita transfer">
+                        </div>
+                        <button type="button" class="btn-gradient">Lanjutkan Transfer</button>
+                    </form>
+                </div>
+            </section>
+
+            <!-- QRIS View -->
+            <section id="qris" class="view-section">
+                <div class="page-header">
+                    <h1>Scan QRIS</h1>
+                    <p>Bayar merchant dengan mudah via QRIS.</p>
+                </div>
+                <div class="qris-container glass-panel text-center">
+                    <div class="qris-scanner">
+                        <div class="scanner-frame">
+                            <div class="scanner-line"></div>
+                        </div>
+                        <p>Arahkan kamera ke kode QRIS</p>
+                    </div>
+                    <div class="divider"><span>ATAU</span></div>
+                    <button type="button" class="btn-outline"><i class="fas fa-image"></i> Upload dari Galeri</button>
+                </div>
+            </section>
+
+            <!-- Top Up View -->
+            <section id="topup" class="view-section">
+                <div class="page-header">
+                    <h1>Top Up E-Wallet</h1>
+                    <p>Isi ulang saldo dompet digital Anda.</p>
+                </div>
+                <div class="form-container glass-panel">
+                    <div class="ewallet-grid">
+                        <div class="ewallet-item active"><i class="fas fa-wallet" style="color:#10B981"></i> GoPay</div>
+                        <div class="ewallet-item"><i class="fas fa-wallet" style="color:#8B5CF6"></i> OVO</div>
+                        <div class="ewallet-item"><i class="fas fa-wallet" style="color:#3B82F6"></i> DANA</div>
+                        <div class="ewallet-item"><i class="fas fa-wallet" style="color:#EF4444"></i> LinkAja</div>
+                    </div>
+                    <form class="action-form mt-4">
+                        <div class="form-group">
+                            <label>Nomor Handphone</label>
+                            <input type="text" placeholder="08xxxxxxxxxx">
+                        </div>
+                        <div class="form-group">
+                            <label>Nominal</label>
+                            <div class="nominal-chips">
+                                <div class="chip">50.000</div>
+                                <div class="chip active">100.000</div>
+                                <div class="chip">200.000</div>
+                                <div class="chip">500.000</div>
+                            </div>
+                            <div class="input-prefix mt-2">
+                                <span>Rp</span>
+                                <input type="number" value="100000">
+                            </div>
+                        </div>
+                        <button type="button" class="btn-gradient">Top Up Sekarang</button>
+                    </form>
+                </div>
+            </section>
+
+            <!-- Tagihan View -->
+            <section id="tagihan" class="view-section">
+                <div class="page-header">
+                    <h1>Pembayaran Tagihan</h1>
+                    <p>Bayar berbagai tagihan dalam satu tempat.</p>
+                </div>
+                <div class="cards-grid" style="grid-template-columns: repeat(4, 1fr);">
+                    <div class="bill-category glass-panel">
+                        <div class="icon"><i class="fas fa-bolt" style="color:#F59E0B"></i></div>
+                        <h3>Listrik PLN</h3>
+                        <p>Token & Tagihan</p>
+                    </div>
+                    <div class="bill-category glass-panel">
+                        <div class="icon"><i class="fas fa-tint" style="color:#3B82F6"></i></div>
+                        <h3>Air PDAM</h3>
+                        <p>Semua Kota</p>
+                    </div>
+                    <div class="bill-category glass-panel">
+                        <div class="icon"><i class="fas fa-wifi" style="color:#10B981"></i></div>
+                        <h3>Internet & TV</h3>
+                        <p>Indihome, Biznet, dll</p>
+                    </div>
+                    <div class="bill-category glass-panel">
+                        <div class="icon"><i class="fas fa-mobile-alt" style="color:#8B5CF6"></i></div>
+                        <h3>Pulsa & Data</h3>
+                        <p>Semua Operator</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- History View -->
+            <section id="history" class="view-section">
+                <div class="page-header">
+                    <h1>Riwayat Transaksi</h1>
+                    <p>Semua mutasi rekening Anda ada di sini.</p>
+                </div>
+                <div class="glass-panel" style="text-align:center; padding: 60px;">
+                    <i class="fas fa-tools" style="font-size: 4rem; color: var(--text-muted); margin-bottom: 20px;"></i>
+                    <h3 style="color: var(--text-main); margin-bottom: 10px; font-size:1.5rem;">Fitur Sedang Dikembangkan</h3>
+                    <p style="color: var(--text-muted);">Riwayat detail akan tersedia pada pembaruan berikutnya.</p>
+                </div>
+            </section>
+
+        </main>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
