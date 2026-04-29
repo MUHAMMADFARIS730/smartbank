@@ -1,0 +1,182 @@
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="895pt" height="672pt" viewBox="0.00 0.00 895.00 672.00">
+<g id="graph0" class="graph" transform="scale(1 1) rotate(0) translate(4 668)">
+<title>SmartBankRoles</title>
+<polygon fill="white" stroke="none" points="-4,4 -4,-668 890.73,-668 890.73,4 -4,4"/>
+<g id="clust1" class="cluster">
+<title>cluster_nasabah</title>
+<polygon fill="#fef3c7" stroke="#fef3c7" points="8,-441 8,-656 166.4,-656 166.4,-441 8,-441"/>
+<text xml:space="preserve" text-anchor="middle" x="87.2" y="-639.4" font-family="Arial bold" font-size="14.00">📱 Nasabah App</text>
+</g>
+<g id="clust2" class="cluster">
+<title>cluster_teller</title>
+<polygon fill="#d1fae5" stroke="#d1fae5" points="336.98,-8 336.98,-223 511.74,-223 511.74,-8 336.98,-8"/>
+<text xml:space="preserve" text-anchor="middle" x="424.36" y="-206.4" font-family="Arial bold" font-size="14.00">👨‍💼 Teller Workspace</text>
+</g>
+<g id="clust3" class="cluster">
+<title>cluster_admin</title>
+<polygon fill="#e0f2fe" stroke="#e0f2fe" points="318.32,-231 318.32,-526 530.4,-526 530.4,-231 318.32,-231"/>
+<text xml:space="preserve" text-anchor="middle" x="424.36" y="-509.4" font-family="Arial bold" font-size="14.00">🏢 Admin Dashboard (Core)</text>
+</g>
+<!-- Database -->
+<g id="node1" class="node">
+<title>Database</title>
+<path fill="#e2e8f0" stroke="#475569" stroke-width="2" d="M886.73,-361.1C886.73,-365.4 846.97,-368.9 798.02,-368.9 749.07,-368.9 709.31,-365.4 709.31,-361.1 709.31,-361.1 709.31,-290.9 709.31,-290.9 709.31,-286.6 749.07,-283.1 798.02,-283.1 846.97,-283.1 886.73,-286.6 886.73,-290.9 886.73,-290.9 886.73,-361.1 886.73,-361.1"/>
+<path fill="none" stroke="#475569" stroke-width="2" d="M886.73,-361.1C886.73,-356.8 846.97,-353.3 798.02,-353.3 749.07,-353.3 709.31,-356.8 709.31,-361.1"/>
+<text xml:space="preserve" text-anchor="middle" x="798.02" y="-330.2" font-family="Arial" font-size="14.00">SmartBank Ledger</text>
+<text xml:space="preserve" text-anchor="middle" x="798.02" y="-313.4" font-family="Arial" font-size="14.00">(Single Source of Truth)</text>
+</g>
+<!-- A_Dashboard -->
+<g id="node8" class="node">
+<title>A_Dashboard</title>
+<path fill="#bae6fd" stroke="black" d="M510.4,-493.2C510.4,-493.2 338.32,-493.2 338.32,-493.2 332.32,-493.2 326.32,-487.2 326.32,-481.2 326.32,-481.2 326.32,-442.8 326.32,-442.8 326.32,-436.8 332.32,-430.8 338.32,-430.8 338.32,-430.8 510.4,-430.8 510.4,-430.8 516.4,-430.8 522.4,-436.8 522.4,-442.8 522.4,-442.8 522.4,-481.2 522.4,-481.2 522.4,-487.2 516.4,-493.2 510.4,-493.2"/>
+<text xml:space="preserve" text-anchor="middle" x="424.36" y="-466.2" font-family="Arial" font-size="14.00">Monitor Money Supply</text>
+<text xml:space="preserve" text-anchor="middle" x="424.36" y="-449.4" font-family="Arial" font-size="14.00">(Reserve, Circulating, Fee)</text>
+</g>
+<!-- Database&#45;&gt;A_Dashboard -->
+<g id="edge12" class="edge">
+<title>Database-&gt;A_Dashboard</title>
+<path fill="none" stroke="#666666" stroke-dasharray="5,2" d="M740.72,-369.12C725.32,-379.4 708.2,-389.55 691.31,-397 641.58,-418.94 583.22,-434.25 533.85,-444.48"/>
+<polygon fill="#666666" stroke="#666666" points="533.4,-441 524.29,-446.41 534.79,-447.86 533.4,-441"/>
+<text xml:space="preserve" text-anchor="middle" x="615.85" y="-445.59" font-family="Arial" font-size="10.00"> Agregasi Data</text>
+</g>
+<!-- N_CekSaldo -->
+<g id="node2" class="node">
+<title>N_CekSaldo</title>
+<path fill="#fde68a" stroke="black" d="M121.9,-622.8C121.9,-622.8 52.5,-622.8 52.5,-622.8 46.5,-622.8 40.5,-616.8 40.5,-610.8 40.5,-610.8 40.5,-589.2 40.5,-589.2 40.5,-583.2 46.5,-577.2 52.5,-577.2 52.5,-577.2 121.9,-577.2 121.9,-577.2 127.9,-577.2 133.9,-583.2 133.9,-589.2 133.9,-589.2 133.9,-610.8 133.9,-610.8 133.9,-616.8 127.9,-622.8 121.9,-622.8"/>
+<text xml:space="preserve" text-anchor="middle" x="87.2" y="-595.8" font-family="Arial" font-size="14.00">Cek Saldo</text>
+</g>
+<!-- N_CekSaldo&#45;&gt;Database -->
+<g id="edge2" class="edge">
+<title>N_CekSaldo-&gt;Database</title>
+<path fill="none" stroke="#666666" stroke-dasharray="5,2" d="M145.43,-608.98C262.54,-623.95 531.89,-640.41 691.31,-507 735.12,-470.33 764.96,-410.56 781.48,-369.82"/>
+<polygon fill="#666666" stroke="#666666" points="146.12,-605.54 135.75,-607.7 145.2,-612.48 146.12,-605.54"/>
+<text xml:space="preserve" text-anchor="middle" x="424.36" y="-621.64" font-family="Arial" font-size="10.00"> Baca Saldo Terkini</text>
+</g>
+<!-- N_Transfer -->
+<g id="node3" class="node">
+<title>N_Transfer</title>
+<path fill="#fde68a" stroke="black" d="M146.4,-558.8C146.4,-558.8 28,-558.8 28,-558.8 22,-558.8 16,-552.8 16,-546.8 16,-546.8 16,-525.2 16,-525.2 16,-519.2 22,-513.2 28,-513.2 28,-513.2 146.4,-513.2 146.4,-513.2 152.4,-513.2 158.4,-519.2 158.4,-525.2 158.4,-525.2 158.4,-546.8 158.4,-546.8 158.4,-552.8 152.4,-558.8 146.4,-558.8"/>
+<text xml:space="preserve" text-anchor="middle" x="87.2" y="-531.8" font-family="Arial" font-size="14.00">Transfer &amp; Top-up</text>
+</g>
+<!-- N_Transfer&#45;&gt;Database -->
+<g id="edge1" class="edge">
+<title>N_Transfer-&gt;Database</title>
+<path fill="none" stroke="#666666" d="M158.88,-543.63C247.01,-551.2 401.74,-558.03 530.4,-530 606.77,-513.36 629.43,-506.77 691.31,-459 719.82,-436.99 745.18,-405.72 763.91,-379.03"/>
+<polygon fill="#666666" stroke="#666666" points="766.62,-381.27 769.4,-371.05 760.85,-377.31 766.62,-381.27"/>
+<text xml:space="preserve" text-anchor="middle" x="424.36" y="-553.23" font-family="Arial" font-size="10.00"> Catat Mutasi &amp; Update Saldo</text>
+</g>
+<!-- N_LoanReq -->
+<g id="node4" class="node">
+<title>N_LoanReq</title>
+<path fill="#fde68a" stroke="black" d="M142.13,-494.8C142.13,-494.8 32.27,-494.8 32.27,-494.8 26.27,-494.8 20.27,-488.8 20.27,-482.8 20.27,-482.8 20.27,-461.2 20.27,-461.2 20.27,-455.2 26.27,-449.2 32.27,-449.2 32.27,-449.2 142.13,-449.2 142.13,-449.2 148.13,-449.2 154.13,-455.2 154.13,-461.2 154.13,-461.2 154.13,-482.8 154.13,-482.8 154.13,-488.8 148.13,-494.8 142.13,-494.8"/>
+<text xml:space="preserve" text-anchor="middle" x="87.2" y="-467.8" font-family="Arial" font-size="14.00">Ajukan Pinjaman</text>
+</g>
+<!-- A_LoanVal -->
+<g id="node9" class="node">
+<title>A_LoanVal</title>
+<path fill="#bae6fd" stroke="black" d="M482.4,-412.8C482.4,-412.8 366.32,-412.8 366.32,-412.8 360.32,-412.8 354.32,-406.8 354.32,-400.8 354.32,-400.8 354.32,-379.2 354.32,-379.2 354.32,-373.2 360.32,-367.2 366.32,-367.2 366.32,-367.2 482.4,-367.2 482.4,-367.2 488.4,-367.2 494.4,-373.2 494.4,-379.2 494.4,-379.2 494.4,-400.8 494.4,-400.8 494.4,-406.8 488.4,-412.8 482.4,-412.8"/>
+<text xml:space="preserve" text-anchor="middle" x="424.36" y="-385.8" font-family="Arial" font-size="14.00">Validasi Pinjaman</text>
+</g>
+<!-- N_LoanReq&#45;&gt;A_LoanVal -->
+<g id="edge8" class="edge">
+<title>N_LoanReq-&gt;A_LoanVal</title>
+<path fill="none" stroke="#666666" d="M154.42,-455.8C208.54,-442.56 285.26,-423.79 342.92,-409.68"/>
+<polygon fill="#666666" stroke="#666666" points="343.47,-413.15 352.35,-407.37 341.8,-406.35 343.47,-413.15"/>
+<text xml:space="preserve" text-anchor="middle" x="250.24" y="-448.48" font-family="Arial" font-size="10.00"> Masuk Antrean (Pending)</text>
+</g>
+<!-- T_Search -->
+<g id="node5" class="node">
+<title>T_Search</title>
+<path fill="#a7f3d0" stroke="black" d="M469.56,-189.8C469.56,-189.8 379.16,-189.8 379.16,-189.8 373.16,-189.8 367.16,-183.8 367.16,-177.8 367.16,-177.8 367.16,-156.2 367.16,-156.2 367.16,-150.2 373.16,-144.2 379.16,-144.2 379.16,-144.2 469.56,-144.2 469.56,-144.2 475.56,-144.2 481.56,-150.2 481.56,-156.2 481.56,-156.2 481.56,-177.8 481.56,-177.8 481.56,-183.8 475.56,-189.8 469.56,-189.8"/>
+<text xml:space="preserve" text-anchor="middle" x="424.36" y="-162.8" font-family="Arial" font-size="14.00">Cari Nasabah</text>
+</g>
+<!-- T_Search&#45;&gt;Database -->
+<g id="edge5" class="edge">
+<title>T_Search-&gt;Database</title>
+<path fill="none" stroke="#666666" stroke-dasharray="5,2" d="M481.88,-185.5C536.41,-203.99 620.83,-234.31 691.31,-267 699.22,-270.67 707.34,-274.7 715.4,-278.87"/>
+<polygon fill="#666666" stroke="#666666" points="713.73,-281.95 724.21,-283.52 717,-275.76 713.73,-281.95"/>
+<text xml:space="preserve" text-anchor="middle" x="615.85" y="-270" font-family="Arial" font-size="10.00"> Query Data Nasabah</text>
+</g>
+<!-- T_SetorTarik -->
+<g id="node6" class="node">
+<title>T_SetorTarik</title>
+<path fill="#a7f3d0" stroke="black" d="M487.06,-125.8C487.06,-125.8 361.66,-125.8 361.66,-125.8 355.66,-125.8 349.66,-119.8 349.66,-113.8 349.66,-113.8 349.66,-92.2 349.66,-92.2 349.66,-86.2 355.66,-80.2 361.66,-80.2 361.66,-80.2 487.06,-80.2 487.06,-80.2 493.06,-80.2 499.06,-86.2 499.06,-92.2 499.06,-92.2 499.06,-113.8 499.06,-113.8 499.06,-119.8 493.06,-125.8 487.06,-125.8"/>
+<text xml:space="preserve" text-anchor="middle" x="424.36" y="-98.8" font-family="Arial" font-size="14.00">Setor &amp; Tarik Tunai</text>
+</g>
+<!-- T_SetorTarik&#45;&gt;Database -->
+<g id="edge6" class="edge">
+<title>T_SetorTarik-&gt;Database</title>
+<path fill="none" stroke="#666666" d="M499.36,-114.75C555.99,-126.53 633.87,-149.02 691.31,-190 721.82,-211.77 747.79,-244.82 766.36,-272.89"/>
+<polygon fill="#666666" stroke="#666666" points="763.18,-274.42 771.55,-280.92 769.06,-270.62 763.18,-274.42"/>
+<text xml:space="preserve" text-anchor="middle" x="615.85" y="-193" font-family="Arial" font-size="10.00"> Update Saldo Tunai &amp; Ledger</text>
+</g>
+<!-- T_Transfer -->
+<g id="node7" class="node">
+<title>T_Transfer</title>
+<path fill="#a7f3d0" stroke="black" d="M491.74,-61.8C491.74,-61.8 356.98,-61.8 356.98,-61.8 350.98,-61.8 344.98,-55.8 344.98,-49.8 344.98,-49.8 344.98,-28.2 344.98,-28.2 344.98,-22.2 350.98,-16.2 356.98,-16.2 356.98,-16.2 491.74,-16.2 491.74,-16.2 497.74,-16.2 503.74,-22.2 503.74,-28.2 503.74,-28.2 503.74,-49.8 503.74,-49.8 503.74,-55.8 497.74,-61.8 491.74,-61.8"/>
+<text xml:space="preserve" text-anchor="middle" x="424.36" y="-34.8" font-family="Arial" font-size="14.00">Bantu Transfer Dana</text>
+</g>
+<!-- T_Transfer&#45;&gt;Database -->
+<g id="edge7" class="edge">
+<title>T_Transfer-&gt;Database</title>
+<path fill="none" stroke="#666666" d="M504.22,-42.92C561.73,-49.52 638.53,-66.59 691.31,-110 741.52,-151.3 769.76,-222.28 784.18,-271.55"/>
+<polygon fill="#666666" stroke="#666666" points="780.73,-272.2 786.81,-280.87 787.47,-270.3 780.73,-272.2"/>
+<text xml:space="preserve" text-anchor="middle" x="615.85" y="-113" font-family="Arial" font-size="10.00"> Proses Pindah Buku</text>
+</g>
+<!-- A_LoanVal&#45;&gt;Database -->
+<g id="edge9" class="edge">
+<title>A_LoanVal-&gt;Database</title>
+<path fill="none" stroke="#666666" d="M494.83,-378.04C551.81,-368.22 633.22,-354.21 697.19,-343.19"/>
+<polygon fill="#666666" stroke="#666666" points="697.76,-346.64 707.02,-341.5 696.57,-339.75 697.76,-346.64"/>
+<text xml:space="preserve" text-anchor="middle" x="615.85" y="-384.3" font-family="Arial" font-size="10.00"> Jika Approve: Reserve turun,</text>
+<text xml:space="preserve" text-anchor="middle" x="615.85" y="-372.3" font-family="Arial" font-size="10.00">Circulating naik, Catat Ledger</text>
+</g>
+<!-- A_Distribute -->
+<g id="node10" class="node">
+<title>A_Distribute</title>
+<path fill="#bae6fd" stroke="black" d="M503.79,-348.8C503.79,-348.8 344.93,-348.8 344.93,-348.8 338.93,-348.8 332.93,-342.8 332.93,-336.8 332.93,-336.8 332.93,-315.2 332.93,-315.2 332.93,-309.2 338.93,-303.2 344.93,-303.2 344.93,-303.2 503.79,-303.2 503.79,-303.2 509.79,-303.2 515.79,-309.2 515.79,-315.2 515.79,-315.2 515.79,-336.8 515.79,-336.8 515.79,-342.8 509.79,-348.8 503.79,-348.8"/>
+<text xml:space="preserve" text-anchor="middle" x="424.36" y="-321.8" font-family="Arial" font-size="14.00">Distribusi Dana (Manual)</text>
+</g>
+<!-- A_Distribute&#45;&gt;Database -->
+<g id="edge10" class="edge">
+<title>A_Distribute-&gt;Database</title>
+<path fill="none" stroke="#666666" d="M516.28,-326C570.96,-326 640.64,-326 696.9,-326"/>
+<polygon fill="#666666" stroke="#666666" points="696.81,-329.5 706.81,-326 696.81,-322.5 696.81,-329.5"/>
+<text xml:space="preserve" text-anchor="middle" x="615.85" y="-329" font-family="Arial" font-size="10.00"> Reserve -&gt; Entitas Luar/Nasabah</text>
+</g>
+<!-- A_Fee -->
+<g id="node11" class="node">
+<title>A_Fee</title>
+<path fill="#bae6fd" stroke="black" d="M488.61,-284.8C488.61,-284.8 360.11,-284.8 360.11,-284.8 354.11,-284.8 348.11,-278.8 348.11,-272.8 348.11,-272.8 348.11,-251.2 348.11,-251.2 348.11,-245.2 354.11,-239.2 360.11,-239.2 360.11,-239.2 488.61,-239.2 488.61,-239.2 494.61,-239.2 500.61,-245.2 500.61,-251.2 500.61,-251.2 500.61,-272.8 500.61,-272.8 500.61,-278.8 494.61,-284.8 488.61,-284.8"/>
+<text xml:space="preserve" text-anchor="middle" x="424.36" y="-257.8" font-family="Arial" font-size="14.00">Tarik Fee Transaksi</text>
+</g>
+<!-- A_Fee&#45;&gt;Database -->
+<g id="edge11" class="edge">
+<title>A_Fee-&gt;Database</title>
+<path fill="none" stroke="#666666" d="M501.02,-275.03C557.56,-284.77 635.41,-298.17 697.08,-308.79"/>
+<polygon fill="#666666" stroke="#666666" points="696.45,-312.23 706.9,-310.48 697.64,-305.34 696.45,-312.23"/>
+<text xml:space="preserve" text-anchor="middle" x="615.85" y="-310.09" font-family="Arial" font-size="10.00"> Circulating -&gt; Fee Bank</text>
+</g>
+<!-- NasabahFisik -->
+<g id="node12" class="node">
+<title>NasabahFisik</title>
+<ellipse fill="#f3f4f6" stroke="black" cx="87.2" cy="-135" rx="86.95" ry="44.12"/>
+<text xml:space="preserve" text-anchor="middle" x="87.2" y="-139.2" font-family="Arial" font-size="14.00">Nasabah</text>
+<text xml:space="preserve" text-anchor="middle" x="87.2" y="-122.4" font-family="Arial" font-size="14.00">(Cabang Bank)</text>
+</g>
+<!-- NasabahFisik&#45;&gt;T_Search -->
+<g id="edge3" class="edge">
+<title>NasabahFisik-&gt;T_Search</title>
+<path fill="none" stroke="#666666" d="M172.77,-143.07C229.32,-148.47 302.74,-155.48 355.47,-160.52"/>
+<polygon fill="#666666" stroke="#666666" points="354.93,-163.98 365.22,-161.45 355.6,-157.01 354.93,-163.98"/>
+<text xml:space="preserve" text-anchor="middle" x="250.24" y="-158.74" font-family="Arial" font-size="10.00"> ID/Rekening</text>
+</g>
+<!-- NasabahFisik&#45;&gt;T_SetorTarik -->
+<g id="edge4" class="edge">
+<title>NasabahFisik-&gt;T_SetorTarik</title>
+<path fill="none" stroke="#666666" d="M172.77,-126.93C223.35,-122.1 287.41,-115.98 338.1,-111.14"/>
+<polygon fill="#666666" stroke="#666666" points="338.23,-114.64 347.85,-110.21 337.57,-107.68 338.23,-114.64"/>
+<text xml:space="preserve" text-anchor="middle" x="250.24" y="-127.65" font-family="Arial" font-size="10.00"> Serahkan/Ambil Tunai</text>
+</g>
+</g>
+</svg>
