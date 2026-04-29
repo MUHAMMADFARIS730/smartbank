@@ -12,6 +12,9 @@
     
     <!-- FontAwesome Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
     <style>
         :root {
@@ -189,7 +192,7 @@
         /* Cards Grid */
         .dashboard-grid {
             display: grid;
-            grid-template-columns: 1fr 1fr;
+            grid-template-columns: 1.2fr 1fr 1.2fr;
             gap: 1.5rem;
         }
 
@@ -253,11 +256,55 @@
             gap: 1.5rem;
             color: var(--text-muted);
             font-size: 0.9rem;
+            margin-top: 1rem;
         }
         
         .account-info span strong {
             color: var(--text-main);
             font-weight: 500;
+        }
+
+        /* Monetary Indicators */
+        .monetary-list {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+
+        .monetary-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0.75rem;
+            background: rgba(255, 255, 255, 0.02);
+            border-radius: 10px;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .monetary-item-left {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .monetary-item-left i {
+            width: 32px;
+            height: 32px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.9rem;
+        }
+
+        .icon-supply { background: rgba(16, 185, 129, 0.15); color: var(--success); }
+        .icon-circulating { background: rgba(79, 172, 254, 0.15); color: var(--secondary); }
+        .icon-fee { background: rgba(245, 158, 11, 0.15); color: var(--warning); }
+
+        .monetary-value {
+            font-weight: 600;
+            font-size: 1.05rem;
         }
 
         /* Quick Actions */
@@ -404,9 +451,116 @@
         .amount-in { color: var(--success); font-weight: 600; }
         .amount-out { color: var(--danger); font-weight: 600; }
 
-        /* Responsive */
+        /* Modal Styling */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.6);
+            backdrop-filter: blur(5px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .modal-overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .modal-content {
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            border-radius: 20px;
+            padding: 2rem;
+            width: 90%;
+            max-width: 450px;
+            transform: translateY(20px);
+            transition: all 0.3s ease;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+        }
+
+        .modal-overlay.active .modal-content {
+            transform: translateY(0);
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .close-btn {
+            background: none;
+            border: none;
+            color: var(--text-muted);
+            font-size: 1.2rem;
+            cursor: pointer;
+            transition: color 0.3s ease;
+        }
+
+        .close-btn:hover {
+            color: var(--danger);
+        }
+
+        /* Form Controls */
+        .form-group {
+            margin-bottom: 1.2rem;
+        }
+
+        .form-label {
+            display: block;
+            color: var(--text-muted);
+            font-size: 0.9rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .form-control {
+            width: 100%;
+            background: rgba(0, 0, 0, 0.2);
+            border: 1px solid var(--glass-border);
+            border-radius: 10px;
+            padding: 0.8rem 1rem;
+            color: var(--text-main);
+            font-family: 'Outfit', sans-serif;
+            transition: all 0.3s ease;
+        }
+
+        .form-control:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 2px rgba(0, 242, 254, 0.2);
+        }
+
+        .btn-primary {
+            width: 100%;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: #000;
+            border: none;
+            border-radius: 10px;
+            padding: 1rem;
+            font-weight: 600;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+            margin-top: 1rem;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 242, 254, 0.3);
+        }
+
         @media (max-width: 1024px) {
             .dashboard-grid { grid-template-columns: 1fr; }
+            .analytics-grid { grid-template-columns: 1fr !important; }
         }
 
         @media (max-width: 768px) {
@@ -458,11 +612,14 @@
             <!-- Balance Card -->
             <div class="glass-card balance-card">
                 <div class="card-label">
-                    <span>Total Saldo Ekosistem</span>
-                    <i class="fa-solid fa-wallet"></i>
+                    <span>Reserve Bank (Dana Tersedia)</span>
+                    <i class="fa-solid fa-building-columns"></i>
                 </div>
                 <div class="balance-amount">
-                    Rp 1.000.000.000
+                    Rp 980.000.000
+                </div>
+                <div style="font-size: 0.85rem; color: var(--success); margin-top: -10px; margin-bottom: 10px;">
+                    <i class="fa-solid fa-arrow-trend-up"></i> 98% dari Total Supply
                 </div>
                 <div class="account-info">
                     <span>Account ID: <strong>SB-CORE-001</strong></span>
@@ -474,18 +631,76 @@
             <div class="glass-card quick-actions-card">
                 <div class="card-label">Aksi Cepat</div>
                 <div class="actions-grid">
-                    <button class="action-btn">
+                    <button class="action-btn" id="btn-kirim-dana">
                         <i class="fa-solid fa-paper-plane"></i>
-                        <span>Kirim Dana</span>
+                        <span style="font-size: 0.85rem;">Kirim Dana</span>
+                    </button>
+                    <button class="action-btn" id="btn-validasi-loan">
+                        <i class="fa-solid fa-file-signature"></i>
+                        <span style="font-size: 0.85rem;">Validasi Loan</span>
                     </button>
                     <button class="action-btn">
-                        <i class="fa-solid fa-building-circle-check"></i>
-                        <span>Validasi Loan</span>
+                        <i class="fa-solid fa-money-bill-transfer"></i>
+                        <span style="font-size: 0.85rem;">Tarik Fee</span>
                     </button>
-                    <button class="action-btn">
-                        <i class="fa-solid fa-receipt"></i>
-                        <span>Tarik Fee</span>
-                    </button>
+                </div>
+            </div>
+
+            <!-- Monetary Indicators Card -->
+            <div class="glass-card">
+                <div class="card-label">Indikator Moneter</div>
+                <div class="monetary-list">
+                    <div class="monetary-item">
+                        <div class="monetary-item-left">
+                            <i class="fa-solid fa-globe icon-supply"></i>
+                            <div>
+                                <div style="font-size: 0.85rem; color: var(--text-muted);">Total Money Supply</div>
+                                <div style="font-size: 0.75rem; color: var(--success);">Limit Maksimal</div>
+                            </div>
+                        </div>
+                        <div class="monetary-value">Rp 1.000.000.000</div>
+                    </div>
+                    <div class="monetary-item">
+                        <div class="monetary-item-left">
+                            <i class="fa-solid fa-users icon-circulating"></i>
+                            <div>
+                                <div style="font-size: 0.85rem; color: var(--text-muted);">Uang Beredar (Circulating)</div>
+                                <div style="font-size: 0.75rem; color: var(--secondary);">1.5% dari Supply</div>
+                            </div>
+                        </div>
+                        <div class="monetary-value">Rp 15.000.000</div>
+                    </div>
+                    <div class="monetary-item">
+                        <div class="monetary-item-left">
+                            <i class="fa-solid fa-sack-dollar icon-fee"></i>
+                            <div>
+                                <div style="font-size: 0.85rem; color: var(--text-muted);">Total Fee Terkumpul</div>
+                                <div style="font-size: 0.75rem; color: var(--warning);">Revenue Sistem</div>
+                            </div>
+                        </div>
+                        <div class="monetary-value">Rp 5.000.000</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Analytics Section -->
+        <section class="analytics-grid" style="display: grid; grid-template-columns: 2fr 1fr; gap: 1.5rem;">
+            <div class="glass-card">
+                <div class="section-header" style="margin-bottom: 1rem;">
+                    <h3>Arus Uang Ekosistem (Money Velocity)</h3>
+                </div>
+                <div style="height: 250px; position: relative;">
+                    <canvas id="moneyFlowChart"></canvas>
+                </div>
+            </div>
+            
+            <div class="glass-card">
+                <div class="section-header" style="margin-bottom: 1rem;">
+                    <h3>Distribusi Supply</h3>
+                </div>
+                <div style="height: 250px; display: flex; justify-content: center; align-items: center; position: relative;">
+                    <canvas id="distributionChart"></canvas>
                 </div>
             </div>
         </section>
@@ -516,6 +731,94 @@
         </section>
 
     </main>
+
+    <!-- Modal Kirim Dana -->
+    <div class="modal-overlay" id="modalTransfer">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Kirim Dana Lintas Aplikasi</h2>
+                <button class="close-btn" id="closeModalBtn"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+            <form id="transferForm">
+                <div class="form-group">
+                    <label class="form-label">Aplikasi Tujuan</label>
+                    <select class="form-control">
+                        <option value="marketplace">Marketplace</option>
+                        <option value="supplier">SupplierHub</option>
+                        <option value="logistics">LogistiKita</option>
+                        <option value="pos">POS Offline</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Account ID Tujuan</label>
+                    <input type="text" class="form-control" placeholder="Contoh: USR-1029" required>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Jumlah (Rp)</label>
+                    <input type="number" class="form-control" placeholder="0" required>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Keterangan / Referensi</label>
+                    <input type="text" class="form-control" placeholder="Catatan transaksi (opsional)">
+                </div>
+                <button type="button" class="btn-primary" onclick="alert('Transaksi berhasil dikirim ke antrean SmartBank!')">Kirim Sekarang</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Modal Validasi Loan -->
+    <div class="modal-overlay" id="modalLoan">
+        <div class="modal-content" style="max-width: 550px;">
+            <div class="modal-header">
+                <h2>Validasi Pinjaman UMKM</h2>
+                <button class="close-btn" id="closeModalLoanBtn"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+            
+            <div class="monetary-item" style="margin-bottom: 1.5rem; background: rgba(245, 158, 11, 0.05); border-color: rgba(245, 158, 11, 0.2);">
+                <div class="monetary-item-left">
+                    <i class="fa-solid fa-circle-exclamation" style="color: var(--warning); background: none; font-size: 1.5rem;"></i>
+                    <div>
+                        <div style="font-weight: 500;">Perhatian: Limit Pinjaman</div>
+                        <div style="font-size: 0.85rem; color: var(--text-muted);">Maksimal pinjaman per user adalah Rp 100.000. Bunga 10%.</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="table-container">
+                <table style="width: 100%; font-size: 0.9rem;">
+                    <thead>
+                        <tr>
+                            <th style="padding: 0.75rem;">User ID</th>
+                            <th style="padding: 0.75rem;">Jumlah Ajuan</th>
+                            <th style="padding: 0.75rem;">Total + Bunga</th>
+                            <th style="padding: 0.75rem;">Aksi</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td style="padding: 0.75rem;">USR-105</td>
+                            <td style="padding: 0.75rem; color: var(--text-main); font-weight: 500;">Rp 50.000</td>
+                            <td style="padding: 0.75rem; color: var(--danger);">Rp 55.000</td>
+                            <td style="padding: 0.75rem;">
+                                <div style="display: flex; gap: 0.5rem;">
+                                    <button style="background: var(--success); color: #fff; border: none; padding: 0.4rem 0.8rem; border-radius: 6px; cursor: pointer; font-weight: 600;"><i class="fa-solid fa-check"></i></button>
+                                    <button style="background: rgba(239, 68, 68, 0.2); color: var(--danger); border: 1px solid var(--danger); padding: 0.4rem 0.8rem; border-radius: 6px; cursor: pointer;"><i class="fa-solid fa-xmark"></i></button>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td style="padding: 0.75rem;">USR-202</td>
+                            <td style="padding: 0.75rem; color: var(--text-main); font-weight: 500;">Rp 120.000</td>
+                            <td style="padding: 0.75rem; color: var(--danger);">Rp 132.000</td>
+                            <td style="padding: 0.75rem;">
+                                <span class="status danger" style="background: rgba(239, 68, 68, 0.1); color: var(--danger); border: 1px solid rgba(239, 68, 68, 0.3);">Over Limit</span>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
 
     <script>
         // Data Mockup untuk Ledger Transaksi
@@ -618,13 +921,124 @@
         // Interaksi Hover Tombol Sederhana
         const actionBtns = document.querySelectorAll('.action-btn');
         actionBtns.forEach(btn => {
-            btn.addEventListener('click', () => {
-                const icon = btn.querySelector('i');
-                icon.style.transform = 'scale(0.8)';
-                setTimeout(() => {
-                    icon.style.transform = 'scale(1)';
-                }, 150);
+            btn.addEventListener('click', (e) => {
+                if(btn.id !== 'btn-kirim-dana') {
+                    const icon = btn.querySelector('i');
+                    icon.style.transform = 'scale(0.8)';
+                    setTimeout(() => {
+                        icon.style.transform = 'scale(1)';
+                    }, 150);
+                }
             });
+        });
+
+        // Modal Logic
+        const modalTransfer = document.getElementById('modalTransfer');
+        const btnKirimDana = document.getElementById('btn-kirim-dana');
+        const closeModalBtn = document.getElementById('closeModalBtn');
+        const modalLoan = document.getElementById('modalLoan');
+        const btnValidasiLoan = document.getElementById('btn-validasi-loan');
+        const closeModalLoanBtn = document.getElementById('closeModalLoanBtn');
+
+        btnKirimDana.addEventListener('click', () => {
+            modalTransfer.classList.add('active');
+        });
+
+        closeModalBtn.addEventListener('click', () => {
+            modalTransfer.classList.remove('active');
+        });
+
+        btnValidasiLoan.addEventListener('click', () => {
+            modalLoan.classList.add('active');
+        });
+
+        closeModalLoanBtn.addEventListener('click', () => {
+            modalLoan.classList.remove('active');
+        });
+
+        // Close modal when clicking outside
+        document.querySelectorAll('.modal-overlay').forEach(modal => {
+            modal.addEventListener('click', (e) => {
+                if(e.target === modal) {
+                    modal.classList.remove('active');
+                }
+            });
+        });
+
+        // Inisialisasi Chart.js
+        Chart.defaults.color = '#94a3b8';
+        Chart.defaults.font.family = "'Outfit', sans-serif";
+
+        // Chart Arus Uang (Money Velocity)
+        const ctxFlow = document.getElementById('moneyFlowChart').getContext('2d');
+        new Chart(ctxFlow, {
+            type: 'line',
+            data: {
+                labels: ['Sen', 'Sel', 'Rab', 'Kam', 'Jum', 'Sab', 'Min'],
+                datasets: [{
+                    label: 'Volume Transaksi (Juta Rp)',
+                    data: [120, 190, 150, 220, 180, 280, 250],
+                    borderColor: '#00f2fe',
+                    backgroundColor: 'rgba(0, 242, 254, 0.1)',
+                    borderWidth: 2,
+                    tension: 0.4,
+                    fill: true,
+                    pointBackgroundColor: '#0a0e17',
+                    pointBorderColor: '#00f2fe',
+                    pointBorderWidth: 2,
+                    pointRadius: 4,
+                    pointHoverRadius: 6
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: { display: false }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        grid: {
+                            color: 'rgba(255, 255, 255, 0.05)',
+                            drawBorder: false
+                        }
+                    },
+                    x: {
+                        grid: { display: false, drawBorder: false }
+                    }
+                }
+            }
+        });
+
+        // Chart Distribusi Uang
+        const ctxDist = document.getElementById('distributionChart').getContext('2d');
+        new Chart(ctxDist, {
+            type: 'doughnut',
+            data: {
+                labels: ['Bank Reserve', 'Beredar (User)', 'Tertahan (Escrow)'],
+                datasets: [{
+                    data: [98, 1.5, 0.5],
+                    backgroundColor: [
+                        '#4facfe',
+                        '#10b981',
+                        '#f59e0b'
+                    ],
+                    borderWidth: 0,
+                    hoverOffset: 4
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                cutout: '75%',
+                plugins: {
+                    legend: {
+                        position: 'bottom',
+                        labels: { padding: 20, usePointStyle: true, pointStyle: 'circle' }
+                    }
+                }
+            }
         });
     </script>
 </body>
