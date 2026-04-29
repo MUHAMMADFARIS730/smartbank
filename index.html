@@ -558,6 +558,44 @@
             box-shadow: 0 5px 15px rgba(0, 242, 254, 0.3);
         }
 
+        /* Tabs for Transfer */
+        .tab-btn {
+            flex: 1;
+            padding: 0.75rem;
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid var(--glass-border);
+            border-radius: 10px;
+            color: var(--text-muted);
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            font-family: 'Outfit', sans-serif;
+        }
+
+        .tab-btn.active {
+            background: rgba(0, 242, 254, 0.1);
+            border-color: var(--primary);
+            color: var(--primary);
+        }
+
+        .tab-btn:hover:not(.active) {
+            background: rgba(255, 255, 255, 0.05);
+            color: var(--text-main);
+        }
+
+        .view-section {
+            animation: fadeIn 0.4s ease forwards;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
         @media (max-width: 1024px) {
             .dashboard-grid { grid-template-columns: 1fr; }
             .analytics-grid { grid-template-columns: 1fr !important; }
@@ -594,8 +632,8 @@
         <!-- Header -->
         <header>
             <div class="header-title">
-                <h1>Overview Ekosistem</h1>
-                <p>Pantau seluruh aktivitas keuangan dari single source of truth.</p>
+                <h1 id="page-title">Overview Ekosistem</h1>
+                <p id="page-subtitle">Pantau seluruh aktivitas keuangan dari single source of truth.</p>
             </div>
             <div class="user-profile">
                 <div class="avatar">A</div>
@@ -606,6 +644,7 @@
             </div>
         </header>
 
+        <div id="view-dashboard" class="view-section">
         <!-- Top Cards Grid -->
         <section class="dashboard-grid">
             
@@ -729,6 +768,145 @@
                 </table>
             </div>
         </section>
+        </div> <!-- End Dashboard View -->
+
+        <!-- Transfer Dana View -->
+        <div id="view-transfer" class="view-section" style="display: none;">
+            <div class="dashboard-grid" style="grid-template-columns: 1.2fr 1fr;">
+                
+                <!-- Form Transfer -->
+                <div class="glass-card">
+                    <div class="card-label" style="margin-bottom: 1.5rem;">
+                        <span>Kirim Dana</span>
+                        <i class="fa-solid fa-paper-plane"></i>
+                    </div>
+                    
+                    <div class="transfer-tabs" style="display: flex; gap: 1rem; margin-bottom: 1.5rem;">
+                        <button type="button" class="tab-btn active" onclick="switchTransferTab('user')"><i class="fa-solid fa-user"></i> Antar User</button>
+                        <button type="button" class="tab-btn" onclick="switchTransferTab('app')"><i class="fa-solid fa-cubes"></i> Lintas Aplikasi</button>
+                    </div>
+
+                    <form id="mainTransferForm">
+                        <div id="form-user-target">
+                            <div class="form-group">
+                                <label class="form-label">User ID Tujuan</label>
+                                <input type="text" class="form-control" placeholder="Contoh: USR-1029" required>
+                            </div>
+                        </div>
+                        <div id="form-app-target" style="display: none;">
+                            <div class="form-group">
+                                <label class="form-label">Aplikasi Tujuan</label>
+                                <select class="form-control">
+                                    <option value="marketplace">Marketplace (PasarKita)</option>
+                                    <option value="supplier">SupplierHub</option>
+                                    <option value="logistics">LogistiKita</option>
+                                    <option value="pos">POS Offline</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Account/Order ID Tujuan</label>
+                                <input type="text" class="form-control" placeholder="Contoh: ORD-5519" required>
+                            </div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label class="form-label">Jumlah Transfer (Rp)</label>
+                            <div style="position: relative;">
+                                <span style="position: absolute; left: 1rem; top: 50%; transform: translateY(-50%); color: var(--text-muted); font-weight: 500;">Rp</span>
+                                <input type="number" class="form-control" style="padding-left: 2.5rem; font-size: 1.2rem; font-weight: 600;" placeholder="0" required>
+                            </div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label class="form-label">Catatan (Opsional)</label>
+                            <textarea class="form-control" rows="3" placeholder="Pesan untuk penerima..." style="resize: none;"></textarea>
+                        </div>
+                        
+                        <div class="monetary-item" style="margin-top: 1.5rem; margin-bottom: 1.5rem; background: rgba(0, 242, 254, 0.05); border-color: rgba(0, 242, 254, 0.2);">
+                            <div class="monetary-item-left">
+                                <i class="fa-solid fa-circle-info" style="color: var(--primary); background: none; font-size: 1.5rem;"></i>
+                                <div>
+                                    <div style="font-weight: 500;">Biaya Admin</div>
+                                    <div style="font-size: 0.85rem; color: var(--text-muted);">Rp 1.000 / Transaksi (Bank Fee)</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <button type="button" class="btn-primary" style="width: 100%; display: flex; justify-content: center; align-items: center; gap: 0.5rem;" onclick="alert('Transfer berhasil diproses!')">
+                            <i class="fa-solid fa-paper-plane"></i> Kirim Sekarang
+                        </button>
+                    </form>
+                </div>
+
+                <!-- Right Column: Balance & Quick Contacts -->
+                <div style="display: flex; flex-direction: column; gap: 1.5rem;">
+                    
+                    <!-- Balance Summary -->
+                    <div class="glass-card balance-card">
+                        <div class="card-label">
+                            <span>Saldo Tersedia (Reserve)</span>
+                            <i class="fa-solid fa-wallet"></i>
+                        </div>
+                        <div class="balance-amount" style="font-size: 2.2rem; margin: 0.5rem 0;">
+                            Rp 980.000.000
+                        </div>
+                        <div class="account-info">
+                            <span>Account ID: <strong>SB-CORE-001</strong></span>
+                        </div>
+                    </div>
+
+                    <!-- Recent Contacts -->
+                    <div class="glass-card">
+                        <div class="card-label" style="margin-bottom: 1rem;">Kontak Tersimpan</div>
+                        <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem;">
+                            <div class="action-btn" style="padding: 0.75rem;">
+                                <div class="avatar" style="width: 40px; height: 40px; margin-bottom: 0.5rem; background: linear-gradient(135deg, #f6d365 0%, #fda085 100%);">B</div>
+                                <span style="font-size: 0.8rem; font-weight: 500;">Budi</span>
+                                <span style="font-size: 0.7rem; color: var(--text-muted);">USR-202</span>
+                            </div>
+                            <div class="action-btn" style="padding: 0.75rem;">
+                                <div class="avatar" style="width: 40px; height: 40px; margin-bottom: 0.5rem; background: linear-gradient(135deg, #84fab0 0%, #8fd3f4 100%);">S</div>
+                                <span style="font-size: 0.8rem; font-weight: 500;">Siti</span>
+                                <span style="font-size: 0.7rem; color: var(--text-muted);">USR-304</span>
+                            </div>
+                            <div class="action-btn" style="padding: 0.75rem; border: 1px dashed var(--glass-border); background: transparent;">
+                                <div style="width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center; background: rgba(255,255,255,0.05); margin-bottom: 0.5rem; color: var(--text-muted);">
+                                    <i class="fa-solid fa-plus"></i>
+                                </div>
+                                <span style="font-size: 0.8rem; font-weight: 500;">Tambah</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Recent Transfers -->
+                    <div class="glass-card" style="flex: 1;">
+                        <div class="card-label" style="margin-bottom: 1rem;">Transfer Terakhir</div>
+                        <div style="display: flex; flex-direction: column; gap: 0.75rem;">
+                            <div style="display: flex; justify-content: space-between; align-items: center; padding: 0.75rem; background: rgba(255,255,255,0.02); border-radius: 10px;">
+                                <div style="display: flex; gap: 1rem; align-items: center;">
+                                    <div class="tx-icon tx-out"><i class="fa-solid fa-arrow-up"></i></div>
+                                    <div>
+                                        <div style="font-weight: 500; font-size: 0.9rem;">Ke Budi (USR-202)</div>
+                                        <div style="font-size: 0.8rem; color: var(--text-muted);">Kemarin, 14:20</div>
+                                    </div>
+                                </div>
+                                <div style="font-weight: 600; color: var(--text-main); font-size: 0.95rem;">Rp 15.000</div>
+                            </div>
+                            <div style="display: flex; justify-content: space-between; align-items: center; padding: 0.75rem; background: rgba(255,255,255,0.02); border-radius: 10px;">
+                                <div style="display: flex; gap: 1rem; align-items: center;">
+                                    <div class="tx-icon tx-out"><i class="fa-solid fa-arrow-up"></i></div>
+                                    <div>
+                                        <div style="font-weight: 500; font-size: 0.9rem;">Marketplace</div>
+                                        <div style="font-size: 0.8rem; color: var(--text-muted);">26 Apr 2026, 09:10</div>
+                                    </div>
+                                </div>
+                                <div style="font-weight: 600; color: var(--text-main); font-size: 0.95rem;">Rp 120.000</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
 
     </main>
 
@@ -940,8 +1118,68 @@
         const btnValidasiLoan = document.getElementById('btn-validasi-loan');
         const closeModalLoanBtn = document.getElementById('closeModalLoanBtn');
 
+        // Navigation Logic
+        const navItems = document.querySelectorAll('.nav-item');
+        const viewSections = document.querySelectorAll('.view-section');
+        const pageTitle = document.getElementById('page-title');
+        const pageSubtitle = document.getElementById('page-subtitle');
+
+        navItems.forEach(item => {
+            item.addEventListener('click', (e) => {
+                e.preventDefault();
+                
+                // Only handle implemented routes
+                const text = item.textContent.trim();
+                if (text !== 'Dashboard' && text !== 'Transfer Dana') {
+                    alert('Halaman ' + text + ' sedang dalam pengembangan.');
+                    return;
+                }
+                
+                // Remove active class from all nav items
+                navItems.forEach(nav => nav.classList.remove('active'));
+                
+                // Add active class to clicked item
+                item.classList.add('active');
+                
+                // Hide all views
+                viewSections.forEach(view => view.style.display = 'none');
+                
+                if(text === 'Dashboard') {
+                    document.getElementById('view-dashboard').style.display = 'block';
+                    pageTitle.textContent = 'Overview Ekosistem';
+                    pageSubtitle.textContent = 'Pantau seluruh aktivitas keuangan dari single source of truth.';
+                } else if (text === 'Transfer Dana') {
+                    document.getElementById('view-transfer').style.display = 'block';
+                    pageTitle.textContent = 'Transfer Dana';
+                    pageSubtitle.textContent = 'Kirim dana ke sesama user atau antar aplikasi dalam ekosistem.';
+                }
+            });
+        });
+
+        // Tab Switching Logic for Transfer
+        function switchTransferTab(type) {
+            const tabs = document.querySelectorAll('.transfer-tabs .tab-btn');
+            tabs.forEach(tab => tab.classList.remove('active'));
+            
+            if(type === 'user') {
+                tabs[0].classList.add('active');
+                document.getElementById('form-user-target').style.display = 'block';
+                document.getElementById('form-app-target').style.display = 'none';
+            } else {
+                tabs[1].classList.add('active');
+                document.getElementById('form-user-target').style.display = 'none';
+                document.getElementById('form-app-target').style.display = 'block';
+            }
+        }
+
         btnKirimDana.addEventListener('click', () => {
-            modalTransfer.classList.add('active');
+            // Trigger nav click for Transfer Dana
+            const transferNavItem = Array.from(navItems).find(item => item.textContent.trim() === 'Transfer Dana');
+            if (transferNavItem) {
+                transferNavItem.click();
+            } else {
+                modalTransfer.classList.add('active');
+            }
         });
 
         closeModalBtn.addEventListener('click', () => {
