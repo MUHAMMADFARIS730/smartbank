@@ -1,0 +1,345 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bank Admin Dashboard</title>
+    
+    <!-- Google Fonts: Outfit -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <!-- Sidebar Navigation -->
+    <aside class="sidebar">
+        <a href="#" class="brand">
+            <i class="fa-solid fa-building-columns"></i>
+            SmartBank
+        </a>
+        <ul class="nav-links">
+            <li><a href="#" class="nav-item active" data-target="view-dashboard"><i class="fa-solid fa-chart-pie"></i> Dashboard Admin</a></li>
+            <li><a href="#" class="nav-item" data-target="view-ledger"><i class="fa-solid fa-file-invoice"></i> Ledger Transaksi</a></li>
+            <li><a href="#" class="nav-item" data-target="view-loan"><i class="fa-solid fa-hand-holding-dollar"></i> Validasi Pinjaman</a></li>
+            <li><a href="#" class="nav-item" data-target="view-users"><i class="fa-solid fa-users"></i> Manajemen Nasabah</a></li>
+            <li style="margin-top: 2rem;"><a href="#" class="nav-item" data-target="view-settings"><i class="fa-solid fa-gear"></i> Pengaturan Sistem</a></li>
+            <li><a href="#" class="nav-item" style="color: var(--danger);" onclick="alert('Logged out!')"><i class="fa-solid fa-arrow-right-from-bracket"></i> Keluar</a></li>
+        </ul>
+    </aside>
+
+    <!-- Main Content Area -->
+    <main class="main-content">
+        
+        <!-- Header -->
+        <header>
+            <div class="header-title">
+                <h1>Overview Ekosistem (Admin Pusat)</h1>
+                <p>Pantau seluruh aktivitas keuangan dari single source of truth.</p>
+            </div>
+            <div class="user-profile">
+                <div class="avatar">A</div>
+                <div class="user-info">
+                    <span style="font-weight: 500; font-size: 0.95rem;">Admin Pusat</span>
+                </div>
+                <i class="fa-solid fa-chevron-down" style="color: var(--text-muted); font-size: 0.8rem;"></i>
+            </div>
+        </header>
+
+        <!-- VIEW: DASHBOARD -->
+        <section id="view-dashboard" class="page-view active">
+            <!-- Top Cards Grid -->
+            <div class="dashboard-grid">
+                
+                <!-- Balance Card -->
+                <div class="glass-card balance-card">
+                    <div class="card-label">
+                        <span>Reserve Bank (Dana Tersedia)</span>
+                        <i class="fa-solid fa-building-columns"></i>
+                    </div>
+                    <div class="balance-amount" id="sys-reserve">
+                        Rp 0
+                    </div>
+                    <div style="font-size: 0.85rem; color: var(--success); margin-top: -10px; margin-bottom: 10px;" id="reserve-percentage">
+                        <i class="fa-solid fa-arrow-trend-up"></i> 0% dari Total Supply
+                    </div>
+                    <div class="account-info">
+                        <span>Account ID: <strong>SB-CORE-001</strong></span>
+                        <span>Status: <strong style="color: var(--success);">Active</strong></span>
+                    </div>
+                </div>
+
+                <!-- Quick Actions -->
+                <div class="glass-card quick-actions-card">
+                    <div class="card-label">Aksi Cepat</div>
+                    <div class="actions-grid">
+                        <button class="action-btn" id="btn-kirim-dana">
+                            <i class="fa-solid fa-paper-plane"></i>
+                            <span style="font-size: 0.85rem;">Kirim Dana</span>
+                        </button>
+                        <button class="action-btn" onclick="document.querySelector('[data-target=view-loan]').click()">
+                            <i class="fa-solid fa-file-signature"></i>
+                            <span style="font-size: 0.85rem;">Validasi Loan</span>
+                        </button>
+                        <button class="action-btn" onclick="tarikFeeManual()">
+                            <i class="fa-solid fa-money-bill-transfer"></i>
+                            <span style="font-size: 0.85rem;">Tarik Fee</span>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Monetary Indicators Card -->
+                <div class="glass-card">
+                    <div class="card-label">Indikator Moneter</div>
+                    <div class="monetary-list">
+                        <div class="monetary-item">
+                            <div class="monetary-item-left">
+                                <i class="fa-solid fa-globe icon-supply"></i>
+                                <div>
+                                    <div style="font-size: 0.85rem; color: var(--text-muted);">Total Money Supply</div>
+                                    <div style="font-size: 0.75rem; color: var(--success);">Limit Maksimal</div>
+                                </div>
+                            </div>
+                            <div class="monetary-value" id="sys-supply">Rp 0</div>
+                        </div>
+                        <div class="monetary-item">
+                            <div class="monetary-item-left">
+                                <i class="fa-solid fa-users icon-circulating"></i>
+                                <div>
+                                    <div style="font-size: 0.85rem; color: var(--text-muted);">Uang Beredar (Circulating)</div>
+                                    <div style="font-size: 0.75rem; color: var(--secondary);" id="circulating-percentage">0% dari Supply</div>
+                                </div>
+                            </div>
+                            <div class="monetary-value" id="sys-circulating">Rp 0</div>
+                        </div>
+                        <div class="monetary-item">
+                            <div class="monetary-item-left">
+                                <i class="fa-solid fa-sack-dollar icon-fee"></i>
+                                <div>
+                                    <div style="font-size: 0.85rem; color: var(--text-muted);">Total Fee Terkumpul</div>
+                                    <div style="font-size: 0.75rem; color: var(--warning);">Revenue Sistem</div>
+                                </div>
+                            </div>
+                            <div class="monetary-value" id="sys-fee">Rp 0</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Analytics Section -->
+            <div class="analytics-grid" style="display: grid; grid-template-columns: 2fr 1fr; gap: 1.5rem; margin-top: 1.5rem;">
+                <div class="glass-card">
+                    <div class="section-header" style="margin-bottom: 1rem;">
+                        <h3>Arus Uang Ekosistem (Money Velocity)</h3>
+                    </div>
+                    <div style="height: 250px; position: relative;">
+                        <canvas id="moneyFlowChart"></canvas>
+                    </div>
+                </div>
+                
+                <div class="glass-card">
+                    <div class="section-header" style="margin-bottom: 1rem;">
+                        <h3>Distribusi Supply</h3>
+                    </div>
+                    <div style="height: 250px; display: flex; justify-content: center; align-items: center; position: relative;">
+                        <canvas id="distributionChart"></canvas>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Ledger Table (Mini) -->
+            <div class="ledger-section" style="margin-top: 1.5rem;">
+                <div class="section-header">
+                    <h2>Riwayat Transaksi Terbaru</h2>
+                    <a href="#" class="view-all" onclick="document.querySelector('[data-target=view-ledger]').click()">Lihat Semua Ledger <i class="fa-solid fa-arrow-right"></i></a>
+                </div>
+                
+                <div class="glass-card table-container">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Transaksi</th>
+                                <th>Tanggal & Waktu</th>
+                                <th>Aplikasi Asal</th>
+                                <th>Status</th>
+                                <th>Jumlah</th>
+                            </tr>
+                        </thead>
+                        <tbody id="ledger-body-mini">
+                            <!-- Data akan di-render oleh JavaScript -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+
+        <!-- VIEW: LEDGER TRANSAKSI -->
+        <section id="view-ledger" class="page-view">
+            <div class="ledger-section">
+                <div class="section-header">
+                    <h2>Ledger Transaksi (Single Source of Truth)</h2>
+                    <button class="btn-primary" style="width: auto; padding: 0.5rem 1rem; margin-top: 0;" onclick="renderLedgerFull()"><i class="fa-solid fa-arrows-rotate"></i> Refresh</button>
+                </div>
+                
+                <div class="glass-card table-container">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Transaksi</th>
+                                <th>Tanggal & Waktu</th>
+                                <th>Aplikasi Asal</th>
+                                <th>Status</th>
+                                <th>Jumlah</th>
+                            </tr>
+                        </thead>
+                        <tbody id="ledger-body-full">
+                            <!-- Data akan di-render oleh JavaScript -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+
+        <!-- VIEW: VALIDASI PINJAMAN -->
+        <section id="view-loan" class="page-view">
+            <div class="ledger-section">
+                <div class="section-header">
+                    <h2>Validasi Pinjaman (Loan)</h2>
+                </div>
+                
+                <div class="monetary-item" style="margin-bottom: 1.5rem; background: rgba(245, 158, 11, 0.05); border-color: rgba(245, 158, 11, 0.2);">
+                    <div class="monetary-item-left">
+                        <i class="fa-solid fa-circle-exclamation" style="color: var(--warning); background: none; font-size: 1.5rem;"></i>
+                        <div>
+                            <div style="font-weight: 500;">Bunga 10% akan diterapkan pada setiap pinjaman disetujui.</div>
+                            <div style="font-size: 0.85rem; color: var(--text-muted);">Dana pencairan akan dipotong langsung dari Reserve Bank dan masuk ke sirkulasi.</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="glass-card table-container">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Account ID Pemohon</th>
+                                <th>Jumlah Ajuan</th>
+                                <th>Total + Bunga (10%)</th>
+                                <th>Status / Aksi</th>
+                            </tr>
+                        </thead>
+                        <tbody id="loan-body-full">
+                            <!-- Data akan di-render oleh JavaScript -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+
+        <!-- VIEW: MANAJEMEN NASABAH -->
+        <section id="view-users" class="page-view">
+            <div class="ledger-section">
+                <div class="section-header">
+                    <h2>Manajemen Nasabah & Ekosistem</h2>
+                </div>
+                
+                <div class="glass-card table-container">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Account ID</th>
+                                <th>Nama Lengkap / Bisnis</th>
+                                <th>Jenis Akun</th>
+                                <th>Saldo Beredar</th>
+                                <th>Status</th>
+                            </tr>
+                        </thead>
+                        <tbody id="users-body">
+                            <!-- Data akan di-render oleh JavaScript -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+
+        <!-- VIEW: PENGATURAN SISTEM -->
+        <section id="view-settings" class="page-view">
+            <div class="ledger-section">
+                <div class="section-header">
+                    <h2>Pengaturan Sistem Bank</h2>
+                </div>
+                
+                <div class="dashboard-grid" style="grid-template-columns: 1fr 1fr;">
+                    <div class="glass-card">
+                        <h3 style="margin-bottom: 1rem; color: var(--primary);">Konfigurasi Moneter</h3>
+                        <form onsubmit="updateSupplyLimit(event)">
+                            <div class="form-group">
+                                <label class="form-label">Total Supply Limit (Rp)</label>
+                                <input type="number" id="set-supply-limit" class="form-control" required>
+                                <small style="color: var(--text-muted); display: block; margin-top: 0.5rem;">Menaikkan atau menurunkan batas pencetakan uang (Money Supply).</small>
+                            </div>
+                            <button type="submit" class="btn-primary">Update Limit</button>
+                        </form>
+                    </div>
+
+                    <div class="glass-card" style="border-color: rgba(239, 68, 68, 0.3);">
+                        <h3 style="margin-bottom: 1rem; color: var(--danger);">Danger Zone</h3>
+                        <p style="color: var(--text-muted); font-size: 0.9rem; margin-bottom: 1.5rem;">Aksi di bawah ini bersifat destruktif dan akan mereset seluruh data simulasi pada ekosistem SmartBank.</p>
+                        
+                        <button class="btn-primary btn-danger" onclick="resetDatabase()">
+                            <i class="fa-solid fa-triangle-exclamation"></i> Reset Seluruh Database (Hard Reset)
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Modal Kirim Dana -->
+    <div class="modal-overlay" id="modalTransfer">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Distribusi Dana (Reserve → Sirkulasi)</h2>
+                <button class="close-btn" id="closeModalBtn"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+            <form id="transferForm">
+                <div class="form-group">
+                    <label class="form-label">Aplikasi / Jenis Tujuan</label>
+                    <select class="form-control" id="tf-app">
+                        <option value="Marketplace">Marketplace</option>
+                        <option value="SupplierHub">SupplierHub</option>
+                        <option value="LogistiKita">LogistiKita</option>
+                        <option value="POS">POS Offline</option>
+                        <option value="Nasabah">Nasabah Individual</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Account ID Tujuan</label>
+                    <input type="text" id="tf-id" class="form-control" placeholder="Contoh: USR-1029" required>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Jumlah (Rp)</label>
+                    <input type="number" id="tf-amount" class="form-control" placeholder="0" required>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Keterangan / Referensi</label>
+                    <input type="text" id="tf-ref" class="form-control" placeholder="Catatan transaksi (opsional)">
+                </div>
+                <button type="submit" class="btn-primary">Kirim Dana Sekarang</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Custom JavaScript -->
+    <script src="script.js"></script>
+</body>
+</html>
