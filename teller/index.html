@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SmartBank - Teller Workspace</title>
+    
+    <!-- Google Fonts: Outfit -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- External CSS -->
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <!-- Sidebar Navigation -->
+    <aside class="sidebar">
+        <a href="#" class="brand">
+            <i class="fa-solid fa-building-columns"></i>
+            SmartBank
+        </a>
+        <ul class="nav-links">
+            <li><a class="nav-item active" onclick="switchView('dashboard', this)"><i class="fa-solid fa-desktop"></i> Workspace</a></li>
+            <li><a class="nav-item" onclick="switchView('nasabah', this)"><i class="fa-solid fa-users"></i> Layanan Nasabah</a></li>
+            <li><a class="nav-item" onclick="switchView('transfer', this)"><i class="fa-solid fa-money-bill-transfer"></i> Transfer Dana</a></li>
+            <li><a class="nav-item" onclick="switchView('riwayat', this)"><i class="fa-solid fa-clock-rotate-left"></i> Riwayat Teller</a></li>
+            <li style="margin-top: 2rem;"><a class="nav-item" style="color: var(--danger);"><i class="fa-solid fa-arrow-right-from-bracket"></i> Tutup Shift</a></li>
+        </ul>
+    </aside>
+
+    <!-- Main Content Area -->
+    <main class="main-content">
+        
+        <!-- Header -->
+        <header>
+            <div class="header-title">
+                <h1 id="page-title">Teller Workspace</h1>
+                <p id="page-subtitle">Pusat layanan transaksi perbankan langsung (Walk-in).</p>
+            </div>
+            <div class="user-profile">
+                <div class="avatar">T1</div>
+                <div class="user-info">
+                    <span style="font-weight: 500; font-size: 0.95rem;">Teller 01</span>
+                </div>
+                <i class="fa-solid fa-chevron-down" style="color: var(--text-muted); font-size: 0.8rem;"></i>
+            </div>
+        </header>
+
+        <!-- VIEW: DASHBOARD -->
+        <div id="view-dashboard" class="view-section active">
+            
+            <div class="search-section">
+                <div class="search-input-wrapper">
+                    <i class="fa-solid fa-magnifying-glass"></i>
+                    <input type="text" class="search-input" placeholder="Cari Nasabah berdasarkan ID User atau Nomor Rekening..." id="quickSearchInput">
+                </div>
+                <button class="btn-primary" onclick="searchCustomer()">
+                    Cari Nasabah
+                </button>
+            </div>
+
+            <section class="dashboard-grid">
+                <div class="glass-card">
+                    <div class="card-label">
+                        <span>Total Transaksi</span>
+                        <i class="fa-solid fa-receipt" style="color: var(--primary);"></i>
+                    </div>
+                    <div class="stat-value">42</div>
+                    <div style="font-size: 0.85rem; color: var(--text-muted); margin-top: 5px;">Shift Berjalan</div>
+                </div>
+
+                <div class="glass-card">
+                    <div class="card-label">
+                        <span>Setoran Diterima (In)</span>
+                        <i class="fa-solid fa-arrow-down" style="color: var(--success);"></i>
+                    </div>
+                    <div class="stat-value" style="font-size: 1.8rem;">Rp 12.500.000</div>
+                    <div style="font-size: 0.85rem; color: var(--text-muted); margin-top: 5px;">24 Transaksi Setor</div>
+                </div>
+
+                <div class="glass-card">
+                    <div class="card-label">
+                        <span>Penarikan (Out)</span>
+                        <i class="fa-solid fa-arrow-up" style="color: var(--danger);"></i>
+                    </div>
+                    <div class="stat-value" style="font-size: 1.8rem;">Rp 4.200.000</div>
+                    <div style="font-size: 0.85rem; color: var(--text-muted); margin-top: 5px;">18 Transaksi Tarik</div>
+                </div>
+            </section>
+
+            <div class="glass-card" style="margin-bottom: 2rem;">
+                <div class="card-label" style="margin-bottom: 1.5rem;">Antrean Terakhir</div>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>ID Transaksi</th>
+                            <th>Waktu</th>
+                            <th>Nasabah</th>
+                            <th>Jenis</th>
+                            <th>Jumlah</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>TRX-8821</td>
+                            <td>10:45 WIB</td>
+                            <td>Budi Santoso</td>
+                            <td class="tx-type"><i class="fa-solid fa-arrow-down in"></i> Setor Tunai</td>
+                            <td style="color: var(--success); font-weight: 500;">Rp 500.000</td>
+                            <td><span class="status success">Sukses</span></td>
+                        </tr>
+                        <tr>
+                            <td>TRX-8822</td>
+                            <td>10:50 WIB</td>
+                            <td>Siti Aminah</td>
+                            <td class="tx-type"><i class="fa-solid fa-arrow-up out"></i> Tarik Tunai</td>
+                            <td style="color: var(--danger); font-weight: 500;">Rp 1.200.000</td>
+                            <td><span class="status success">Sukses</span></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- VIEW: LAYANAN NASABAH -->
+        <div id="view-nasabah" class="view-section">
+            <div id="customer-info" style="display: none;">
+                <div class="customer-profile glass-card">
+                    <div class="customer-avatar">
+                        <i class="fa-solid fa-user"></i>
+                    </div>
+                    <div class="customer-details">
+                        <h3 id="cName">Budi Santoso</h3>
+                        <p>ID: <strong id="cId">USR-1029</strong> | Rek: <strong>1029-3342-9981</strong></p>
+                    </div>
+                    <div class="customer-balance">
+                        <div class="label">Saldo Tersedia</div>
+                        <div class="amount">Rp 4.500.000</div>
+                    </div>
+                </div>
+
+                <div class="two-column">
+                    <!-- Form Setor Tunai -->
+                    <div class="glass-card">
+                        <div class="card-label" style="margin-bottom: 1.5rem; color: var(--success);">
+                            <span>Setor Tunai (Deposit)</span>
+                            <i class="fa-solid fa-money-bill-wave"></i>
+                        </div>
+                        <form onsubmit="handleDeposit(event)">
+                            <div class="form-group">
+                                <label class="form-label">Jumlah Setoran</label>
+                                <div class="input-group">
+                                    <span class="input-prefix">Rp</span>
+                                    <input type="number" class="form-control" placeholder="0" required>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Berita / Keterangan (Opsional)</label>
+                                <input type="text" class="form-control" placeholder="Contoh: Tabungan gaji">
+                            </div>
+                            <button type="submit" class="btn-primary" style="width: 100%; justify-content: center; margin-top: 1.5rem; background: linear-gradient(135deg, var(--success), #34d399);">
+                                Proses Setor Tunai
+                            </button>
+                        </form>
+                    </div>
+
+                    <!-- Form Tarik Tunai -->
+                    <div class="glass-card">
+                        <div class="card-label" style="margin-bottom: 1.5rem; color: var(--danger);">
+                            <span>Tarik Tunai (Withdraw)</span>
+                            <i class="fa-solid fa-hand-holding-dollar"></i>
+                        </div>
+                        <form onsubmit="handleWithdraw(event)">
+                            <div class="form-group">
+                                <label class="form-label">Jumlah Penarikan</label>
+                                <div class="input-group">
+                                    <span class="input-prefix">Rp</span>
+                                    <input type="number" class="form-control" placeholder="0" required>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">PIN Otorisasi Nasabah</label>
+                                <input type="password" class="form-control" placeholder="Masukkan 6 digit PIN" required>
+                            </div>
+                            <button type="submit" class="btn-primary" style="width: 100%; justify-content: center; margin-top: 1.5rem; background: linear-gradient(135deg, var(--danger), #f87171); color: white;">
+                                Proses Tarik Tunai
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Empty State for Customer Search -->
+            <div id="customer-empty" class="glass-card" style="text-align: center; padding: 4rem 2rem;">
+                <i class="fa-solid fa-id-card" style="font-size: 4rem; color: var(--glass-border); margin-bottom: 1rem;"></i>
+                <h3>Cari Nasabah Terlebih Dahulu</h3>
+                <p style="color: var(--text-muted); margin-top: 0.5rem;">Gunakan kotak pencarian di Workspace untuk memulai transaksi Setor/Tarik.</p>
+                <button class="btn-primary" style="margin: 2rem auto 0;" onclick="switchView('dashboard', document.querySelectorAll('.nav-item')[0])">Kembali ke Workspace</button>
+            </div>
+        </div>
+
+        <!-- VIEW: TRANSFER DANA -->
+        <div id="view-transfer" class="view-section">
+            <div class="glass-card" style="max-width: 600px; margin: 0 auto;">
+                <div class="card-label" style="margin-bottom: 1.5rem;">
+                    <span>Transfer Dana Nasabah</span>
+                    <i class="fa-solid fa-money-bill-transfer"></i>
+                </div>
+                
+                <form onsubmit="handleTransfer(event)">
+                    <div class="form-group">
+                        <label class="form-label">ID Nasabah Pengirim</label>
+                        <input type="text" class="form-control" placeholder="Contoh: USR-1029" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">ID Nasabah Tujuan</label>
+                        <input type="text" class="form-control" placeholder="Contoh: USR-5541" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Jumlah Transfer</label>
+                        <div class="input-group">
+                            <span class="input-prefix">Rp</span>
+                            <input type="number" class="form-control" placeholder="0" required>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">PIN Otorisasi Nasabah Pengirim</label>
+                        <input type="password" class="form-control" placeholder="Masukkan 6 digit PIN" required>
+                    </div>
+                    <button type="submit" class="btn-primary" style="width: 100%; justify-content: center; margin-top: 1.5rem;">
+                        Proses Transfer
+                    </button>
+                </form>
+            </div>
+        </div>
+
+        <!-- VIEW: RIWAYAT TELLER -->
+        <div id="view-riwayat" class="view-section">
+            <div class="glass-card">
+                <div class="card-label" style="margin-bottom: 1.5rem;">
+                    <span>Riwayat Transaksi Shift Ini</span>
+                    <button style="background: none; border: 1px solid var(--glass-border); color: var(--text-main); padding: 0.5rem 1rem; border-radius: 8px; cursor: pointer;"><i class="fa-solid fa-download"></i> Unduh Laporan</button>
+                </div>
+                
+                <div style="overflow-x: auto;">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Waktu</th>
+                                <th>ID Transaksi</th>
+                                <th>Nasabah</th>
+                                <th>Jenis Transaksi</th>
+                                <th>Kredit (Masuk)</th>
+                                <th>Debit (Keluar)</th>
+                                <th>Status</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>10:50 WIB</td>
+                                <td>TRX-8822</td>
+                                <td>Siti Aminah</td>
+                                <td>Tarik Tunai</td>
+                                <td>-</td>
+                                <td style="color: var(--danger);">Rp 1.200.000</td>
+                                <td><span class="status success">Sukses</span></td>
+                            </tr>
+                            <tr>
+                                <td>10:45 WIB</td>
+                                <td>TRX-8821</td>
+                                <td>Budi Santoso</td>
+                                <td>Setor Tunai</td>
+                                <td style="color: var(--success);">Rp 500.000</td>
+                                <td>-</td>
+                                <td><span class="status success">Sukses</span></td>
+                            </tr>
+                            <tr>
+                                <td>09:30 WIB</td>
+                                <td>TRX-8815</td>
+                                <td>Ahmad Yani</td>
+                                <td>Transfer ke USR-992</td>
+                                <td>-</td>
+                                <td style="color: var(--danger);">Rp 250.000</td>
+                                <td><span class="status success">Sukses</span></td>
+                            </tr>
+                            <tr>
+                                <td>09:05 WIB</td>
+                                <td>TRX-8802</td>
+                                <td>Rina Melati</td>
+                                <td>Setor Tunai</td>
+                                <td style="color: var(--success);">Rp 2.000.000</td>
+                                <td>-</td>
+                                <td><span class="status success">Sukses</span></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+    </main>
+
+    <!-- External JavaScript -->
+    <script src="script.js"></script>
+</body>
+</html>
