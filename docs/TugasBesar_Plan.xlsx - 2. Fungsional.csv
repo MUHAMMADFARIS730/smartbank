@@ -1,0 +1,113 @@
+Kelompok,Aplikasi,Fitur,Deskripsi,Input,Proses,Output,Endpoint API,Desain
+1,SmartBank,Registrasi & login user,User dapat membuat akun dan login menggunakan JWT authentication,"user_id, parameter terkait fitur 'Registrasi & login user'",Validasi input → proses 'Registrasi & login user' → jika transaksi integrasi SmartBank → simpan hasil,status + data hasil 'Registrasi & login user',/smartbank/registrasi_&_login_user,"Buat fitur 'Registrasi & login user' pada aplikasi SmartBank.
+Deskripsi: User dapat membuat akun dan login menggunakan JWT authentication
+
+Gunakan REST API dengan spesifikasi:
+- Input: user_id, parameter terkait fitur 'Registrasi & login user'
+- Proses: Validasi input → proses 'Registrasi & login user' → jika transaksi integrasi SmartBank → simpan hasil
+- Output: status + data hasil 'Registrasi & login user'
+- Endpoint: /smartbank/registrasi_&_login_user
+
+Ketentuan:
+- Gunakan MVC / Clean Code
+- Validasi semua input
+- Jika transaksi → wajib integrasi SmartBank
+- Gunakan JSON"
+,SmartBank,Manajemen saldo,Menampilkan saldo dan riwayat transaksi,"user_id, parameter terkait fitur 'Manajemen saldo'",Validasi input → proses 'Manajemen saldo' → jika transaksi integrasi SmartBank → simpan hasil,status + data hasil 'Manajemen saldo',/smartbank/manajemen_saldo,"Buat fitur 'Manajemen saldo' pada aplikasi SmartBank.
+Deskripsi: Menampilkan saldo dan riwayat transaksi
+
+Gunakan REST API dengan spesifikasi:
+- Input: user_id, parameter terkait fitur 'Manajemen saldo'
+- Proses: Validasi input → proses 'Manajemen saldo' → jika transaksi integrasi SmartBank → simpan hasil
+- Output: status + data hasil 'Manajemen saldo'
+- Endpoint: /smartbank/manajemen_saldo
+
+Ketentuan:
+- Gunakan MVC / Clean Code
+- Validasi semua input
+- Jika transaksi → wajib integrasi SmartBank
+- Gunakan JSON"
+,SmartBank,Transfer antar user,Transfer saldo antar user,"user_id, parameter terkait fitur 'Transfer antar user'",Validasi input → proses 'Transfer antar user' → jika transaksi integrasi SmartBank → simpan hasil,status + data hasil 'Transfer antar user',/smartbank/transfer_antar_user,"Buat fitur 'Transfer antar user' pada aplikasi SmartBank.
+Deskripsi: Transfer saldo antar user
+
+Gunakan REST API dengan spesifikasi:
+- Input: user_id, parameter terkait fitur 'Transfer antar user'
+- Proses: Validasi input → proses 'Transfer antar user' → jika transaksi integrasi SmartBank → simpan hasil
+- Output: status + data hasil 'Transfer antar user'
+- Endpoint: /smartbank/transfer_antar_user
+
+Ketentuan:
+- Gunakan MVC / Clean Code
+- Validasi semua input
+- Jika transaksi → wajib integrasi SmartBank
+- Gunakan JSON"
+,SmartBank,Pembayaran transaksi,Memproses pembayaran dari semua aplikasi,"user_id, parameter terkait fitur 'Pembayaran transaksi'",Validasi input → proses 'Pembayaran transaksi' → jika transaksi integrasi SmartBank → simpan hasil,status + data hasil 'Pembayaran transaksi',/smartbank/pembayaran_transaksi,"Buat fitur 'Pembayaran transaksi' pada aplikasi SmartBank.
+Deskripsi: Memproses pembayaran dari semua aplikasi
+
+Gunakan REST API dengan spesifikasi:
+- Input: user_id, parameter terkait fitur 'Pembayaran transaksi'
+- Proses: Validasi input → proses 'Pembayaran transaksi' → jika transaksi integrasi SmartBank → simpan hasil
+- Output: status + data hasil 'Pembayaran transaksi'
+- Endpoint: /smartbank/pembayaran_transaksi
+
+Ketentuan:
+- Gunakan MVC / Clean Code
+- Validasi semua input
+- Jika transaksi → wajib integrasi SmartBank
+- Gunakan JSON"
+,SmartBank,Pinjaman (loan),User dapat mengajukan pinjaman,"user_id, parameter terkait fitur 'Pinjaman (loan)'",Validasi input → proses 'Pinjaman (loan)' → jika transaksi integrasi SmartBank → simpan hasil,status + data hasil 'Pinjaman (loan)',/smartbank/pinjaman_(loan),"Buat fitur 'Pinjaman (loan)' pada aplikasi SmartBank.
+Deskripsi: User dapat mengajukan pinjaman
+
+Gunakan REST API dengan spesifikasi:
+- Input: user_id, parameter terkait fitur 'Pinjaman (loan)'
+- Proses: Validasi input → proses 'Pinjaman (loan)' → jika transaksi integrasi SmartBank → simpan hasil
+- Output: status + data hasil 'Pinjaman (loan)'
+- Endpoint: /smartbank/pinjaman_(loan)
+
+Ketentuan:
+- Gunakan MVC / Clean Code
+- Validasi semua input
+- Jika transaksi → wajib integrasi SmartBank
+- Gunakan JSON"
+,SmartBank,Pajak & biaya,Memotong pajak transaksi,"user_id, parameter terkait fitur 'Pajak & biaya'",Validasi input → proses 'Pajak & biaya' → jika transaksi integrasi SmartBank → simpan hasil,status + data hasil 'Pajak & biaya',/smartbank/pajak_&_biaya,"Buat fitur 'Pajak & biaya' pada aplikasi SmartBank.
+Deskripsi: Memotong pajak transaksi
+
+Gunakan REST API dengan spesifikasi:
+- Input: user_id, parameter terkait fitur 'Pajak & biaya'
+- Proses: Validasi input → proses 'Pajak & biaya' → jika transaksi integrasi SmartBank → simpan hasil
+- Output: status + data hasil 'Pajak & biaya'
+- Endpoint: /smartbank/pajak_&_biaya
+
+Ketentuan:
+- Gunakan MVC / Clean Code
+- Validasi semua input
+- Jika transaksi → wajib integrasi SmartBank
+- Gunakan JSON"
+,SmartBank,Ledger transaksi,Mencatat seluruh transaksi,"user_id, parameter terkait fitur 'Ledger transaksi'",Validasi input → proses 'Ledger transaksi' → jika transaksi integrasi SmartBank → simpan hasil,status + data hasil 'Ledger transaksi',/smartbank/ledger_transaksi,"Buat fitur 'Ledger transaksi' pada aplikasi SmartBank.
+Deskripsi: Mencatat seluruh transaksi
+
+Gunakan REST API dengan spesifikasi:
+- Input: user_id, parameter terkait fitur 'Ledger transaksi'
+- Proses: Validasi input → proses 'Ledger transaksi' → jika transaksi integrasi SmartBank → simpan hasil
+- Output: status + data hasil 'Ledger transaksi'
+- Endpoint: /smartbank/ledger_transaksi
+
+Ketentuan:
+- Gunakan MVC / Clean Code
+- Validasi semua input
+- Jika transaksi → wajib integrasi SmartBank
+- Gunakan JSON"
+,SmartBank,Biaya layanan bank,Potongan biaya untuk setiap transaksi sebagai fee bank,"user_id, parameter terkait fitur 'Biaya layanan bank'",Validasi input → proses 'Biaya layanan bank' → jika transaksi integrasi SmartBank → simpan hasil,status + data hasil 'Biaya layanan bank',/smartbank/biaya_layanan_bank,"Buat fitur 'Biaya layanan bank' pada aplikasi SmartBank.
+Deskripsi: Potongan biaya untuk setiap transaksi sebagai fee bank
+
+Gunakan REST API dengan spesifikasi:
+- Input: user_id, parameter terkait fitur 'Biaya layanan bank'
+- Proses: Validasi input → proses 'Biaya layanan bank' → jika transaksi integrasi SmartBank → simpan hasil
+- Output: status + data hasil 'Biaya layanan bank'
+- Endpoint: /smartbank/biaya_layanan_bank
+
+Ketentuan:
+- Gunakan MVC / Clean Code
+- Validasi semua input
+- Jika transaksi → wajib integrasi SmartBank
+- Gunakan JSON"
