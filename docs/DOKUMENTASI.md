@@ -72,8 +72,21 @@ Menyimpan daftar nasabah dan entitas sistem.
 3. `circulating` bank bertambah (dana turun ke pengguna/ekosistem).
 4. Transaksi dicatat sebagai pengeluaran (`out`) di `sb_transactions`.
 
-## 4. Pengembangan Lanjutan (Future Work)
-- **Integrasi Backend Nyata**: Mengganti `localStorage` dengan REST API menggunakan backend nyata (misalnya Golang atau Node.js) dan sistem database relasional (PostgreSQL/MySQL) yang diakses lewat API Gateway.
-- **Sinkronisasi Antar Role**: Mengintegrasikan UI Teller dan Nasabah agar aksi form benar-benar melakukan hit API ke backend yang pada akhirnya mengubah state di Admin (saat ini Teller & Nasabah masih UI murni tanpa integrasi `localStorage` Admin).
-- **Sistem Autentikasi**: Menambahkan sistem login SSO dan autentikasi berbasis token JWT untuk setiap role (Admin, Teller, Nasabah) agar lebih aman.
-- **Validasi Integritas Data**: Memastikan tidak ada pengeluaran (`circulating`) yang melebihi batas simpanan (`reserve`).
+## 4. Arsitektur Teknis Lanjutan & Algoritma (Tahap Migrasi)
+
+Sistem akan dimigrasikan dari purwarupa `localStorage` menuju arsitektur *Client-Server* siap produksi dengan spesifikasi berikut:
+
+### A. Tech Stack
+- **Backend API**: Node.js (Express.js) + TypeScript untuk memproses *request* secara asinkron dengan tingkat keamanan *type-safety*.
+- **Database Utama**: PostgreSQL (RDBMS). Sangat krusial untuk menjaga kepatuhan ACID (*Atomicity, Consistency, Isolation, Durability*) dalam sistem core banking.
+- **Autentikasi**: JSON Web Token (JWT) + Manajemen sesi RBAC (Role-Based Access Control) untuk memisahkan domain Admin, Teller, dan Nasabah.
+
+### B. Implementasi Algoritma Inti
+1. **Algoritma Double-Entry Bookkeeping**: 
+   - Setiap pemindahan saldo wajib dieksekusi dalam satu *Database Transaction Block*. Transaksi selalu menyeimbangkan sisi Debit (pengurang saldo) dan Kredit (penambah saldo). Jika salah satu sisi gagal, seluruh proses di-*rollback*.
+2. **Algoritma Optimistic Locking (Concurrency Control)**:
+   - Digunakan pada tabel saldo (Balance) pengguna untuk mencegah *race condition* (misal: menekan tombol transfer secara cepat 2x di saat saldo hanya cukup 1x). Algoritma ini akan memverifikasi *versioning* baris data sebelum melakukan *update*.
+3. **Algoritma Credit Scoring**:
+   - Untuk memvalidasi persetujuan di tabel `sb_loans`. Sistem akan memberikan rekomendasi (skor) kelayakan peminjam berdasarkan pembobotan histori saldo harian dan rutinitas mutasi nasabah.
+4. **Algoritma Fraud & Anomaly Detection**:
+   - Pendeteksian *rule-based* otomatis untuk mendeteksi transaksi lonjakan yang melebihi batas kewajaran profil nasabah (secara nominal dan frekuensi), untuk kemudian di-*flag* atau ditahan masuk ke antrean persetujuan Admin.

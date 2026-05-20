@@ -42,8 +42,10 @@ smartbank/
 ├── admin/         # Antarmuka Admin (Core System & Single Source of Truth)
 ├── teller/        # Antarmuka Teller Workspace
 ├── nasabah/       # Antarmuka Aplikasi Nasabah (Mobile UI)
-├── README.md      # Informasi Repositori (File ini)
-└── DOKUMENTASI.md # Dokumentasi Teknis & Alur Kerja Database
+├── docs/          # Folder Dokumen (PRD, Arsitektur, Role, dsb)
+│   ├── PRD.md           # Product Requirements Document
+│   └── DOKUMENTASI.md   # Dokumentasi Teknis & Arsitektur
+└── README.md      # Informasi Repositori (File ini)
 ```
 
 ## ⚙️ Cara Menjalankan
@@ -57,4 +59,7 @@ smartbank/
 Sistem pada Admin Dashboard saat ini menggunakan `localStorage` untuk simulasi backend dan aliran data. Untuk mereset seluruh data ke kondisi awal (default), Anda dapat menggunakan tombol **"Reset Database"** pada menu Pengaturan di Admin Dashboard.
 
 ---
-Silakan lihat file [`DOKUMENTASI.md`](DOKUMENTASI.md) untuk informasi teknis lebih mendalam terkait struktur database simulasi dan alur kerja aplikasi.
+Silakan lihat folder `docs/` untuk dokumentasi yang komprehensif:
+- [**PRD.md**](docs/PRD.md) - *Product Requirements Document* (Kebutuhan fungsional & standar produk).
+- [**DOKUMENTASI.md**](docs/DOKUMENTASI.md) - Dokumentasi teknis, struktur database simulasi, & arsitektur.
+- [**role.md**](docs/role.md) - Visualisasi alur kerja dan interaksi antar peran.

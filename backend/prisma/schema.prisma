@@ -1,0 +1,53 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model SystemState {
+  id             Int      @id @default(1)
+  totalSupply    Float    @map("total_supply")
+  reserve        Float
+  circulating    Float
+  feeAccumulated Float    @map("fee_accumulated")
+
+  @@map("system_state")
+}
+
+model User {
+  id        String   @id // ex: USR-001
+  name      String
+  type      String   // Nasabah, Marketplace, Logistics, etc.
+  balance   Float    @default(0)
+  status    String   @default("active") // active, blocked
+  loans     Loan[]
+
+  @@map("users")
+}
+
+model Transaction {
+  id        String   @id // ex: TRX-101
+  title     String
+  subtitle  String?
+  type      String   // in, out, fee
+  amount    Float
+  source    String   // SmartBank, Marketplace, Nasabah App
+  status    String   @default("success") // success, pending, rejected
+  createdAt DateTime @default(now()) @map("created_at")
+
+  @@map("transactions")
+}
+
+model Loan {
+  id                String   @id // ex: LOAN-001
+  userId            String   @map("user_id")
+  amount            Float
+  totalWithInterest Float    @map("total_with_interest")
+  status            String   @default("pending") // pending, approved, rejected
+  
+  user              User     @relation(fields: [userId], references: [id])
+
+  @@map("loans")
+}
