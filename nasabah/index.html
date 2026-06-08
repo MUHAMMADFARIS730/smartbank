@@ -262,14 +262,18 @@
 
             <!-- History View -->
             <section id="history" class="view-section">
-                <div class="page-header">
-                    <h1>Riwayat Transaksi</h1>
-                    <p>Semua mutasi rekening Anda ada di sini.</p>
+                <div class="page-header" style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 15px;">
+                    <div>
+                        <h1>Riwayat Transaksi</h1>
+                        <p>Semua mutasi rekening Anda ada di sini.</p>
+                    </div>
+                    <div class="search-bar" style="max-width: 300px; width: 100%; border-radius: 8px; overflow: hidden; display: flex; align-items: center; padding: 0 15px;">
+                        <i class="fas fa-search" style="color: var(--text-muted);"></i>
+                        <input type="text" id="kmp-search-input" placeholder="Cari transaksi (KMP Algoritma)..." style="width: 100%; padding: 12px; border: none; background: transparent; color: var(--text-main); outline: none;">
+                    </div>
                 </div>
-                <div class="glass-panel" style="text-align:center; padding: 60px;">
-                    <i class="fas fa-tools" style="font-size: 4rem; color: var(--text-muted); margin-bottom: 20px;"></i>
-                    <h3 style="color: var(--text-main); margin-bottom: 10px; font-size:1.5rem;">Fitur Sedang Dikembangkan</h3>
-                    <p style="color: var(--text-muted);">Riwayat detail akan tersedia pada pembaruan berikutnya.</p>
+                <div class="glass-panel" id="history-container">
+                    <p style="text-align:center; padding:40px; color:var(--text-muted);">Memuat riwayat...</p>
                 </div>
             </section>
 
@@ -281,7 +285,9 @@
                     <h1>Sistem Pinjaman</h1>
                     <p>Ajukan pinjaman dengan mudah. Limit Rp 100.000 (Bunga 10%)</p>
                 </div>
-                <div class="form-container glass-panel">
+                
+                <div class="form-container glass-panel" style="margin-bottom: 20px;">
+                    <h3 style="margin-bottom: 15px; color: var(--primary);"><i class="fas fa-plus-circle"></i> Ajukan Pinjaman Baru</h3>
                     <form id="loan-form" class="action-form">
                         <div class="form-group">
                             <label>Jumlah Pinjaman (Max: Rp 100.000)</label>
@@ -293,6 +299,13 @@
                         </div>
                         <button type="submit" class="btn-gradient">Ajukan Pinjaman</button>
                     </form>
+                </div>
+
+                <div class="form-container glass-panel">
+                    <h3 style="margin-bottom: 15px; color: var(--primary);"><i class="fas fa-list-alt"></i> Daftar Pinjaman Aktif</h3>
+                    <div id="active-loans-container">
+                        <p style="color: var(--text-muted); text-align: center;">Memuat data pinjaman...</p>
+                    </div>
                 </div>
             </section>
 

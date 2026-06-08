@@ -98,49 +98,116 @@ function renderLedgerMini(txs) {
     });
 }
 
+let allLedgerTransactions = [];
+
+// KMP Algoritma: Membangun array awalan (Failure Function / LPS table)
+function buildLPSTable(pattern) {
+    const lps = new Array(pattern.length).fill(0);
+    let length = 0;
+    let i = 1;
+    while (i < pattern.length) {
+        if (pattern[i] === pattern[length]) {
+            length++;
+            lps[i] = length;
+            i++;
+        } else {
+            if (length !== 0) {
+                length = lps[length - 1];
+            } else {
+                lps[i] = 0;
+                i++;
+            }
+        }
+    }
+    return lps;
+}
+
+// KMP Algoritma: Pencarian Ledger
+function searchLedgerKMP(transactionsArray, keyword) {
+    if (!keyword) return transactionsArray;
+    
+    const lps = buildLPSTable(keyword.toLowerCase());
+    
+    return transactionsArray.filter(tx => {
+        // Menggabungkan beberapa field menjadi satu string target pencarian
+        const text = (tx.id + " " + tx.title + " " + tx.subtitle + " " + tx.source).toLowerCase();
+        let i = 0, j = 0;
+        
+        while (i < text.length) {
+            if (keyword.toLowerCase()[j] === text[i]) {
+                i++; 
+                j++;
+            }
+            if (j === keyword.length) {
+                return true; // Keyword ditemukan
+            } else if (i < text.length && keyword.toLowerCase()[j] !== text[i]) {
+                if (j !== 0) {
+                    j = lps[j - 1];
+                } else {
+                    i++;
+                }
+            }
+        }
+        return false;
+    });
+}
+
+function renderLedgerTable(displayTxs) {
+    const tbody = document.getElementById('ledger-body-full');
+    if(!tbody) return;
+
+    tbody.innerHTML = '';
+    if(displayTxs.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="5" style="text-align: center; color: var(--text-muted);">Belum ada transaksi</td></tr>';
+        return;
+    }
+
+    displayTxs.forEach(tx => {
+        const tr = document.createElement('tr');
+        const sign = (tx.type === 'out' || tx.type === 'fee') ? '-' : '+';
+        tr.innerHTML = `
+            <td>
+                <div class="tx-details">
+                    ${getIconClass(tx.type)}
+                    <div>
+                        <div class="tx-title">${tx.title}</div>
+                        <div class="tx-subtitle">${tx.id} • ${tx.subtitle}</div>
+                    </div>
+                </div>
+            </td>
+            <td style="color: var(--text-muted); font-size: 0.9rem;">${new Date(tx.createdAt).toLocaleString('id-ID')}</td>
+            <td>
+                <span style="background: rgba(255,255,255,0.1); padding: 4px 10px; border-radius: 6px; font-size: 0.85rem;">
+                    ${tx.source}
+                </span>
+            </td>
+            <td>${getStatusLabel(tx.status)}</td>
+            <td class="${getAmountClass(tx.type)}">${sign} ${formatRp(tx.amount)}</td>
+        `;
+        tbody.appendChild(tr);
+    });
+}
+
 // Ledger Full Page
 async function renderLedgerFull() {
+    const searchInput = document.getElementById('kmp-search-input');
+    if (searchInput) searchInput.value = ''; // Reset search
+
     try {
         const res = await fetch(`${API_URL}/dashboard`);
         const data = await res.json();
-        const displayTxs = data.transactions;
-        const tbody = document.getElementById('ledger-body-full');
-        if(!tbody) return;
-
-        tbody.innerHTML = '';
-        if(displayTxs.length === 0) {
-            tbody.innerHTML = '<tr><td colspan="5" style="text-align: center; color: var(--text-muted);">Belum ada transaksi</td></tr>';
-            return;
-        }
-
-        displayTxs.forEach(tx => {
-            const tr = document.createElement('tr');
-            const sign = (tx.type === 'out' || tx.type === 'fee') ? '-' : '+';
-            tr.innerHTML = `
-                <td>
-                    <div class="tx-details">
-                        ${getIconClass(tx.type)}
-                        <div>
-                            <div class="tx-title">${tx.title}</div>
-                            <div class="tx-subtitle">${tx.id} • ${tx.subtitle}</div>
-                        </div>
-                    </div>
-                </td>
-                <td style="color: var(--text-muted); font-size: 0.9rem;">${new Date(tx.createdAt).toLocaleString('id-ID')}</td>
-                <td>
-                    <span style="background: rgba(255,255,255,0.1); padding: 4px 10px; border-radius: 6px; font-size: 0.85rem;">
-                        ${tx.source}
-                    </span>
-                </td>
-                <td>${getStatusLabel(tx.status)}</td>
-                <td class="${getAmountClass(tx.type)}">${sign} ${formatRp(tx.amount)}</td>
-            `;
-            tbody.appendChild(tr);
-        });
+        allLedgerTransactions = data.transactions;
+        renderLedgerTable(allLedgerTransactions);
     } catch (e) {
         console.error("Error fetching ledger:", e);
     }
 }
+
+window.handleLedgerSearch = function() {
+    const keyword = document.getElementById('kmp-search-input').value;
+    const filteredTxs = searchLedgerKMP(allLedgerTransactions, keyword);
+    renderLedgerTable(filteredTxs);
+};
 
 async function renderLoans() {
     try {
@@ -301,6 +368,84 @@ window.updateSupplyLimit = function(e) {
 window.resetDatabase = function() {
     alert("Reset database tidak lagi didukung di UI (harus via console DB atau script seeder).");
 };
+
+// --- Algoritma BFS (AML Tracking) ---
+window.trackAML = async function(e) {
+    e.preventDefault();
+    const targetId = document.getElementById('aml-target').value;
+    const btn = e.target.querySelector('button');
+    btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Melacak...';
+    
+    try {
+        const res = await fetch(`${API_URL}/aml-tracking/${targetId}`);
+        const data = await res.json();
+        
+        btn.innerHTML = '<i class="fa-solid fa-magnifying-glass"></i> Lacak Sekarang';
+        
+        if (res.ok) {
+            document.getElementById('aml-result-container').style.display = 'block';
+            document.getElementById('aml-target-label').textContent = targetId;
+            
+            let treeHtml = 'Struktur Aliran Dana:\n\n';
+            if (data.network && data.network.length > 0) {
+                data.network.forEach(node => {
+                    const indent = '  '.repeat(node.depth);
+                    const branch = node.depth > 0 ? '└─ ' : '■ ';
+                    treeHtml += `${indent}${branch}${node.account} (Kedalaman: ${node.depth})\n`;
+                });
+            } else {
+                treeHtml += 'Tidak ditemukan aliran keluar dari entitas ini.';
+            }
+            document.getElementById('aml-tree').textContent = treeHtml;
+        } else {
+            alert('Gagal melacak: ' + data.error);
+            document.getElementById('aml-result-container').style.display = 'none';
+        }
+    } catch (err) {
+        btn.innerHTML = '<i class="fa-solid fa-magnifying-glass"></i> Lacak Sekarang';
+        alert('Terjadi kesalahan koneksi.');
+    }
+};
+
+// --- Algoritma Parallel Report (Divide & Conquer) ---
+window.generateParallelReport = async function() {
+    const btn = document.getElementById('btn-generate-report');
+    btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Agregasi Parallel Berjalan...';
+    btn.disabled = true;
+    
+    // Sembunyikan hasil lama
+    document.getElementById('report-result').style.display = 'none';
+
+    try {
+        // Simulasi waktu proses UI jika data terlalu cepat kembali dari local backend
+        const start = Date.now();
+        const res = await fetch(`${API_URL}/closing-report`);
+        const data = await res.json();
+        
+        const elapsed = Date.now() - start;
+        if (elapsed < 1000) await new Promise(r => setTimeout(r, 1000 - elapsed));
+        
+        btn.innerHTML = '<i class="fa-solid fa-check"></i> Selesai';
+        setTimeout(() => {
+            btn.innerHTML = '<i class="fa-solid fa-bolt"></i> Generate Report Ulang';
+            btn.disabled = false;
+        }, 2000);
+
+        if (res.ok) {
+            document.getElementById('report-result').style.display = 'grid';
+            document.getElementById('rep-in').textContent = formatRp(data.totalIn);
+            document.getElementById('rep-out').textContent = formatRp(data.totalOut);
+            document.getElementById('rep-vol').textContent = data.totalTransactions.toLocaleString('id-ID') + ' Data';
+        } else {
+            alert('Gagal generate: ' + data.error);
+        }
+    } catch (err) {
+        btn.innerHTML = '<i class="fa-solid fa-bolt"></i> Generate Report';
+        btn.disabled = false;
+        alert('Terjadi kesalahan koneksi.');
+    }
+};
+
 
 // Transfer Form Submit
 if(document.getElementById('transferForm')) {

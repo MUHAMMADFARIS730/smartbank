@@ -7,14 +7,14 @@ Admin Bank,Distribusi Dana (F-06),Selesai,Pemindahan dana legal dari bank Reserv
 Admin Bank,Tarik Biaya Layanan (F-07),Selesai,Trigger manual penarikan fee admin dari sirkulasi
 Admin Bank,Buku Besar / Ledger (F-08),Selesai,Tabel Ledger memonitor riwayat transaksi SSOT real-time
 Teller Bank,Antarmuka (UI/UX) Workspace,Selesai,Workspace operasional memiliki pencarian nasabah
-Teller Bank,Integrasi Backend,Tertunda,Logika endpoint API ke antarmuka Teller belum terpasang
-Teller Bank,Setor & Tarik Tunai (F-05),Berjalan,UI beroperasi secara visual namun eksekusi mock alert
-Teller Bank,Transfer Antar User (F-02),Berjalan,UI pemindahan dana tersedia namun belum memanggil ke API
+Teller Bank,Integrasi Backend,Selesai,Logika endpoint API ke antarmuka Teller telah terhubung sepenuhnya
+Teller Bank,Setor & Tarik Tunai (F-05),Selesai,Formulir eksekusi terhubung secara langsung ke server melalui API
+Teller Bank,Transfer Antar User (F-02),Selesai,Pemindahan dana terverifikasi menggunakan backend API
 Nasabah Ritel,Antarmuka (UI/UX) Mobile-first,Selesai,Dioptimalkan ukuran HP dengan efek glassmorphism
-Nasabah Ritel,Integrasi Backend,Tertunda,Pertukaran data API ke aplikasi Nasabah belum ada
-Nasabah Ritel,Informasi Saldo (F-01),Berjalan,UI kartu ATM visual tersedia namun data statis
-Nasabah Ritel,Transfer Antar User (F-02),Berjalan,UI pengiriman dana dinamis fungsionalitas belum aktif
-Nasabah Ritel,Pengajuan Pinjaman (F-04),Berjalan,Skema pinjaman perlu disatukan ke API
+Nasabah Ritel,Integrasi Backend,Selesai,Sistem JWT Authentication dan data fetch API telah diimplementasi
+Nasabah Ritel,Informasi Saldo (F-01),Selesai,UI menampilkan data saldo akurat langsung dari server
+Nasabah Ritel,Transfer Antar User (F-02),Selesai,Fungsionalitas transfer sukses terkoneksi ke API internal
+Nasabah Ritel,Pengajuan Pinjaman (F-04),Selesai,Formulir pinjaman otomatis mengirim request ke Dashboard Admin
 Sistem & Infrastruktur,Arsitektur RDBMS,Selesai,Konfigurasi ORM Prisma sudah diterapkan
 Sistem & Infrastruktur,Business Logic,Selesai,API Node.js untuk Dashboard User Loan dan Transaksi
 Sistem & Infrastruktur,Pembayaran Transaksi API (F-03),Berjalan,Logika webhook dan validasi untuk entitas luar dipersiapkan

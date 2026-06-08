@@ -31,6 +31,8 @@
             <li><a href="#" class="nav-item active" data-target="view-dashboard"><i class="fa-solid fa-chart-pie"></i> Dashboard Admin</a></li>
             <li><a href="#" class="nav-item" data-target="view-ledger"><i class="fa-solid fa-file-invoice"></i> Ledger Transaksi</a></li>
             <li><a href="#" class="nav-item" data-target="view-loan"><i class="fa-solid fa-hand-holding-dollar"></i> Validasi Pinjaman</a></li>
+            <li><a href="#" class="nav-item" data-target="view-aml"><i class="fa-solid fa-network-wired"></i> Pelacakan AML (BFS)</a></li>
+            <li><a href="#" class="nav-item" data-target="view-report"><i class="fa-solid fa-file-invoice-dollar"></i> Laporan Akhir (Paralel)</a></li>
             <li><a href="#" class="nav-item" data-target="view-users"><i class="fa-solid fa-users"></i> Manajemen Nasabah</a></li>
             <li style="margin-top: 2rem;"><a href="#" class="nav-item" data-target="view-settings"><i class="fa-solid fa-gear"></i> Pengaturan Sistem</a></li>
             <li><a href="#" class="nav-item" style="color: var(--danger);" onclick="alert('Logged out!')"><i class="fa-solid fa-arrow-right-from-bracket"></i> Keluar</a></li>
@@ -185,9 +187,15 @@
         <!-- VIEW: LEDGER TRANSAKSI -->
         <section id="view-ledger" class="page-view">
             <div class="ledger-section">
-                <div class="section-header">
+                <div class="section-header" style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem;">
                     <h2>Ledger Transaksi (Single Source of Truth)</h2>
-                    <button class="btn-primary" style="width: auto; padding: 0.5rem 1rem; margin-top: 0;" onclick="renderLedgerFull()"><i class="fa-solid fa-arrows-rotate"></i> Refresh</button>
+                    <div style="display: flex; gap: 10px; align-items: center; flex-wrap: wrap;">
+                        <div class="search-box" style="position: relative;">
+                            <i class="fa-solid fa-magnifying-glass" style="position: absolute; left: 12px; top: 50%; transform: translateY(-50%); color: var(--text-muted);"></i>
+                            <input type="text" id="kmp-search-input" class="form-control" placeholder="Cari TX ID, Referensi, Nama..." style="padding-left: 35px; width: 300px; max-width: 100%; border-radius: 8px;" onkeyup="handleLedgerSearch()">
+                        </div>
+                        <button class="btn-primary" style="width: auto; padding: 0.5rem 1rem; margin-top: 0;" onclick="renderLedgerFull()"><i class="fa-solid fa-arrows-rotate"></i> Refresh</button>
+                    </div>
                 </div>
                 
                 <div class="glass-card table-container">
@@ -266,6 +274,65 @@
                             <!-- Data akan di-render oleh JavaScript -->
                         </tbody>
                     </table>
+                </div>
+            </div>
+        </section>
+
+        <!-- VIEW: AML TRACKING (BFS) -->
+        <section id="view-aml" class="page-view">
+            <div class="ledger-section">
+                <div class="section-header">
+                    <h2>Pelacakan Anti-Money Laundering (BFS Graph)</h2>
+                    <p>Temukan relasi aliran dana mencurigakan antar entitas secara otomatis.</p>
+                </div>
+                
+                <div class="glass-card" style="margin-bottom: 20px;">
+                    <form onsubmit="trackAML(event)">
+                        <div class="form-group">
+                            <label class="form-label">Masukkan Account ID Target</label>
+                            <div style="display: flex; gap: 10px;">
+                                <input type="text" id="aml-target" class="form-control" placeholder="Contoh: USR-1029" required style="flex: 1;">
+                                <button type="submit" class="btn-primary" style="width: auto; margin: 0;"><i class="fa-solid fa-magnifying-glass"></i> Lacak Sekarang</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+
+                <div class="glass-card" id="aml-result-container" style="display: none; background: rgba(30, 41, 59, 0.7);">
+                    <h3 style="margin-bottom: 15px; color: var(--primary);">Jaringan Terlacak: <span id="aml-target-label" style="color: var(--text-main);"></span></h3>
+                    <div id="aml-tree" style="padding: 15px; background: rgba(15, 23, 42, 0.5); border-radius: 8px; font-family: monospace; white-space: pre-wrap; color: #a5b4fc; line-height: 1.6;"></div>
+                </div>
+            </div>
+        </section>
+
+        <!-- VIEW: LAPORAN PARALEL (DIVIDE & CONQUER) -->
+        <section id="view-report" class="page-view">
+            <div class="ledger-section">
+                <div class="section-header">
+                    <h2>Laporan Agregasi Transaksi (Parallel Threads)</h2>
+                    <p>Mengkonsolidasi ratusan transaksi untuk menghitung total neraca bank secara cepat dan aman.</p>
+                </div>
+                
+                <div class="glass-card text-center" style="padding: 40px;">
+                    <i class="fa-solid fa-server" style="font-size: 4rem; color: var(--primary); margin-bottom: 20px;"></i>
+                    <h3 style="margin-bottom: 15px;">Mulai Proses Agregasi</h3>
+                    <p style="color: var(--text-muted); margin-bottom: 20px;">Algoritma akan memecah data transaksi menjadi chunk terpisah (Divide) dan memprosesnya secara asinkron (Conquer).</p>
+                    <button class="btn-primary" id="btn-generate-report" onclick="generateParallelReport()" style="max-width: 250px; margin: 0 auto;"><i class="fa-solid fa-bolt"></i> Generate Report</button>
+                </div>
+
+                <div class="dashboard-grid" id="report-result" style="display: none; margin-top: 20px;">
+                    <div class="glass-card balance-card" style="background: linear-gradient(135deg, rgba(16, 185, 129, 0.1) 0%, rgba(5, 150, 105, 0.2) 100%);">
+                        <div class="card-label">Total Dana Masuk (In)</div>
+                        <div class="balance-amount" id="rep-in" style="color: var(--success);">Rp 0</div>
+                    </div>
+                    <div class="glass-card balance-card" style="background: linear-gradient(135deg, rgba(239, 68, 68, 0.1) 0%, rgba(220, 38, 38, 0.2) 100%);">
+                        <div class="card-label">Total Dana Keluar (Out)</div>
+                        <div class="balance-amount" id="rep-out" style="color: var(--danger);">Rp 0</div>
+                    </div>
+                    <div class="glass-card balance-card" style="background: linear-gradient(135deg, rgba(59, 130, 246, 0.1) 0%, rgba(37, 99, 235, 0.2) 100%);">
+                        <div class="card-label">Total Volume (Tx)</div>
+                        <div class="balance-amount" id="rep-vol" style="color: var(--primary);">0</div>
+                    </div>
                 </div>
             </div>
         </section>

@@ -3,6 +3,52 @@ import prisma from '../prismaClient';
 
 const router = Router();
 
+// --- Bank Graph for AML Tracking (BFS) ---
+class BankGraph {
+    private adjacencyList: Map<string, string[]>;
+
+    constructor() {
+        this.adjacencyList = new Map();
+    }
+
+    addTransaction(fromAccount: string, toAccount: string) {
+        if (!this.adjacencyList.has(fromAccount)) {
+            this.adjacencyList.set(fromAccount, []);
+        }
+        if (!this.adjacencyList.has(toAccount)) {
+            this.adjacencyList.set(toAccount, []);
+        }
+        this.adjacencyList.get(fromAccount)?.push(toAccount);
+    }
+
+    trackMoneyLaunderingBFS(startAccount: string, depthLimit: number) {
+        let visited = new Set<string>();
+        let queue: { account: string, depth: number }[] = [];
+
+        queue.push({ account: startAccount, depth: 0 });
+        visited.add(startAccount);
+
+        const suspiciousNetwork = [];
+
+        while (queue.length > 0) {
+            let { account, depth } = queue.shift()!;
+            suspiciousNetwork.push({ account, depth });
+
+            if (depth < depthLimit) {
+                let destinations = this.adjacencyList.get(account) || [];
+                for (let dest of destinations) {
+                    if (!visited.has(dest)) {
+                        visited.add(dest);
+                        queue.push({ account: dest, depth: depth + 1 });
+                    }
+                }
+            }
+        }
+        return suspiciousNetwork;
+    }
+}
+// ----------------------------------------
+
 // Helper to get or create system state
 async function getSystemState() {
   let state = await prisma.systemState.findUnique({ where: { id: 1 } });
@@ -184,7 +230,7 @@ router.post('/loans/:id/validate', async (req, res) => {
         data: {
           id: generateId('TRX'),
           title: 'Pencairan Pinjaman',
-          subtitle: `Nasabah: ${loan.user.name}`,
+          subtitle: `Pencairan ke ${loan.user.name}`,
           type: 'out',
           amount: loan.amount,
           source: 'SmartBank'
@@ -209,6 +255,74 @@ router.get('/users', async (req, res) => {
   } catch (error) {
     console.error(error);
     res.status(500).json({ error: 'Internal Server Error' });
+  }
+});
+
+// AML Tracking Endpoint
+router.get('/aml-tracking/:id', async (req, res) => {
+  const { id } = req.params;
+  try {
+    const transactions = await prisma.transaction.findMany();
+    const graph = new BankGraph();
+    
+    transactions.forEach((tx: any) => {
+      if (tx.title === 'Transfer Dana' && tx.subtitle) {
+        const parts = tx.subtitle.replace('Dari ', '').split(' ke ');
+        if (parts.length === 2) {
+          graph.addTransaction(parts[0].trim(), parts[1].trim());
+        }
+      }
+    });
+
+    const user = await prisma.user.findUnique({ where: { id } });
+    if (!user) return res.status(404).json({ error: 'User not found' });
+
+    const network = graph.trackMoneyLaunderingBFS(user.name, 3); // Lacak hingga 3 layer/kedalaman
+    res.json({ network });
+  } catch (error: any) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
+// Closing Report Endpoint (Divide & Conquer Parallel Simulation)
+router.get('/closing-report', async (req, res) => {
+  try {
+    const transactions = await prisma.transaction.findMany();
+    
+    // Divide (Pecah data jadi 4 chunk)
+    const chunkSize = Math.ceil(transactions.length / 4) || 1;
+    const chunks = [];
+    for (let i = 0; i < transactions.length; i += chunkSize) {
+      chunks.push(transactions.slice(i, i + chunkSize));
+    }
+
+    // Conquer (Proses secara non-blocking / simulasi paralel worker thread)
+    const promises = chunks.map((chunk: any[]) => {
+      return new Promise((resolve) => {
+        setTimeout(() => {
+            const sumOut = chunk.filter(t => t.type === 'out').reduce((acc, t) => acc + t.amount, 0);
+            const sumIn = chunk.filter(t => t.type === 'in').reduce((acc, t) => acc + t.amount, 0);
+            const sumFee = chunk.filter(t => t.type === 'fee').reduce((acc, t) => acc + t.amount, 0);
+            resolve({ sumOut, sumIn, sumFee, count: chunk.length });
+        }, 50); // delay untuk melepas thread sementara
+      });
+    });
+
+    const results: any[] = await Promise.all(promises);
+
+    // Combine (Agregasi akhir)
+    const finalReport = results.reduce((acc, r) => {
+      return {
+        totalOut: acc.totalOut + r.sumOut,
+        totalIn: acc.totalIn + r.sumIn,
+        totalFee: acc.totalFee + r.sumFee,
+        totalTransactions: acc.totalTransactions + r.count
+      };
+    }, { totalOut: 0, totalIn: 0, totalFee: 0, totalTransactions: 0 });
+
+    res.json(finalReport);
+  } catch (error: any) {
+    res.status(500).json({ error: error.message });
   }
 });
 

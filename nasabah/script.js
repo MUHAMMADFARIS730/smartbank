@@ -1,6 +1,7 @@
 const API_URL = 'http://localhost:3000/api/nasabah';
 let currentUser = null;
 let currentToken = null;
+let allTransactions = []; // Store transactions for search
 
 // Check saved session before doing anything
 window.addEventListener('DOMContentLoaded', () => {
@@ -45,6 +46,7 @@ navItems.forEach(item => {
 
         if (targetId === 'dashboard') loadDashboard();
         if (targetId === 'history') loadHistory();
+        if (targetId === 'loan') loadActiveLoans();
     });
 });
 
@@ -122,56 +124,120 @@ async function loadDashboard() {
     }
 }
 
+// --- Algoritma KMP (Knuth-Morris-Pratt) ---
+function buildLPSTable(pattern) {
+    const lps = new Array(pattern.length).fill(0);
+    let length = 0;
+    let i = 1;
+    while (i < pattern.length) {
+        if (pattern[i] === pattern[length]) {
+            length++;
+            lps[i] = length;
+            i++;
+        } else {
+            if (length !== 0) {
+                length = lps[length - 1];
+            } else {
+                lps[i] = 0;
+                i++;
+            }
+        }
+    }
+    return lps;
+}
+
+function searchKMP(text, pattern) {
+    if (pattern.length === 0) return 0;
+    text = text.toLowerCase();
+    pattern = pattern.toLowerCase();
+    const lps = buildLPSTable(pattern);
+    let i = 0;
+    let j = 0;
+    while (i < text.length) {
+        if (pattern[j] === text[i]) {
+            i++;
+            j++;
+        }
+        if (j === pattern.length) {
+            return i - j;
+        } else if (i < text.length && pattern[j] !== text[i]) {
+            if (j !== 0) {
+                j = lps[j - 1];
+            } else {
+                i++;
+            }
+        }
+    }
+    return -1;
+}
+// ------------------------------------------
+
 // Fetch Full History
 async function loadHistory() {
     try {
         const res = await fetch(`${API_URL}/transactions`, {
             headers: { 'Authorization': `Bearer ${currentToken}` }
         });
-        const transactions = await res.json();
-        
-        const historySection = document.getElementById('history');
-        
-        let html = `
-            <div class="page-header">
-                <h1>Riwayat Transaksi</h1>
-                <p>Semua mutasi rekening Anda ada di sini.</p>
-            </div>
-            <div class="glass-panel">
-        `;
-        
-        if (transactions.length === 0) {
-            html += `<p style="text-align:center; padding:40px; color:var(--text-muted);">Belum ada riwayat transaksi.</p>`;
-        } else {
-            transactions.forEach(tx => {
-                const isOut = tx.type === 'out' || tx.type === 'fee';
-                const iconClass = isOut ? 'transfer-out' : 'transfer-in';
-                const iconFa = isOut ? 'fa-arrow-right' : 'fa-arrow-left';
-                const amountClass = isOut ? 'negative' : 'positive';
-                const amountPrefix = isOut ? '-' : '+';
-                const dateStr = new Date(tx.createdAt).toLocaleDateString('id-ID', { day: 'numeric', month: 'short', year: 'numeric', hour: '2-digit', minute:'2-digit' });
-
-                html += `
-                    <div class="transaction-item" style="padding: 15px; border-bottom: 1px solid var(--glass-border);">
-                        <div class="tx-info">
-                            <div class="tx-icon ${iconClass}"><i class="fas ${iconFa}"></i></div>
-                            <div>
-                                <h4>${tx.title}</h4>
-                                <span class="date">${tx.subtitle || ''} | ${dateStr}</span>
-                            </div>
-                        </div>
-                        <div class="tx-amount ${amountClass}" style="font-weight:600;">${amountPrefix} Rp ${tx.amount.toLocaleString('id-ID')}</div>
-                    </div>
-                `;
-            });
-        }
-        
-        html += `</div>`;
-        historySection.innerHTML = html;
-        
+        allTransactions = await res.json();
+        renderHistory(allTransactions);
     } catch (err) {
         console.error(err);
     }
+}
+
+function renderHistory(transactions) {
+    const historyContainer = document.getElementById('history-container');
+    if (!historyContainer) return;
+    
+    let html = '';
+    
+    if (transactions.length === 0) {
+        html += `<p style="text-align:center; padding:40px; color:var(--text-muted);">Belum ada riwayat transaksi.</p>`;
+    } else {
+        transactions.forEach(tx => {
+            const isOut = tx.type === 'out' || tx.type === 'fee';
+            const iconClass = isOut ? 'transfer-out' : 'transfer-in';
+            const iconFa = isOut ? 'fa-arrow-right' : 'fa-arrow-left';
+            const amountClass = isOut ? 'negative' : 'positive';
+            const amountPrefix = isOut ? '-' : '+';
+            const dateStr = new Date(tx.createdAt).toLocaleDateString('id-ID', { day: 'numeric', month: 'short', year: 'numeric', hour: '2-digit', minute:'2-digit' });
+
+            html += `
+                <div class="transaction-item" style="padding: 15px; border-bottom: 1px solid var(--glass-border);">
+                    <div class="tx-info">
+                        <div class="tx-icon ${iconClass}"><i class="fas ${iconFa}"></i></div>
+                        <div>
+                            <h4>${tx.title}</h4>
+                            <span class="date">${tx.subtitle || ''} | ${dateStr}</span>
+                        </div>
+                    </div>
+                    <div class="tx-amount ${amountClass}" style="font-weight:600;">${amountPrefix} Rp ${tx.amount.toLocaleString('id-ID')}</div>
+                </div>
+            `;
+        });
+    }
+    
+    historyContainer.innerHTML = html;
+}
+
+// Search Logic
+const searchInput = document.getElementById('kmp-search-input');
+if (searchInput) {
+    searchInput.addEventListener('input', (e) => {
+        const keyword = e.target.value.trim();
+        if (keyword === '') {
+            renderHistory(allTransactions);
+            return;
+        }
+
+        // Gunakan KMP untuk mencari
+        const filtered = allTransactions.filter(tx => {
+            const fullText = `${tx.title} ${tx.subtitle} ${tx.amount}`.toLowerCase();
+            return searchKMP(fullText, keyword) !== -1;
+        });
+
+        renderHistory(filtered);
+    });
 }
 
 // Transfer Form
@@ -241,8 +307,93 @@ if (loanForm) {
             alert(data.message);
             e.target.reset();
             document.getElementById('loan-total').innerText = 'Rp 0';
+            loadActiveLoans(); // Segarkan daftar pinjaman
         } catch (err) {
             alert('Pengajuan Pinjaman Ditolak: ' + err.message);
         }
     });
+}
+
+// Active Loans & Repayment
+async function loadActiveLoans() {
+    const container = document.getElementById('active-loans-container');
+    if (!container) return;
+
+    try {
+        const res = await fetch(`${API_URL}/loan`, {
+            headers: { 'Authorization': `Bearer ${currentToken}` }
+        });
+        const loans = await res.json();
+
+        if (loans.length === 0) {
+            container.innerHTML = '<p style="color: var(--text-muted); text-align: center;">Tidak ada pinjaman aktif saat ini.</p>';
+            return;
+        }
+
+        let html = '';
+        loans.forEach(loan => {
+            const statusLabel = loan.status === 'pending' 
+                ? '<span style="color: #F59E0B; background: rgba(245, 158, 11, 0.1); padding: 4px 8px; border-radius: 4px; font-size: 0.8rem;">Menunggu Persetujuan</span>'
+                : '<span style="color: #10B981; background: rgba(16, 185, 129, 0.1); padding: 4px 8px; border-radius: 4px; font-size: 0.8rem;">Sudah Cair / Aktif</span>';
+
+            html += `
+                <div style="background: rgba(255, 255, 255, 0.05); padding: 15px; border-radius: 8px; margin-bottom: 15px; border: 1px solid var(--glass-border);">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
+                        <strong>ID: ${loan.id}</strong>
+                        ${statusLabel}
+                    </div>
+                    <div style="margin-bottom: 15px;">
+                        <div style="display: flex; justify-content: space-between; margin-bottom: 5px;">
+                            <span style="color: var(--text-muted);">Sisa Tagihan (inc. Bunga):</span>
+                            <strong style="color: var(--danger);">Rp ${loan.totalWithInterest.toLocaleString('id-ID')}</strong>
+                        </div>
+                    </div>
+                    ${loan.status === 'approved' ? `
+                        <form onsubmit="payLoan(event, '${loan.id}', ${loan.totalWithInterest})" style="display: flex; gap: 10px; align-items: stretch;">
+                            <div class="input-prefix" style="flex: 1; margin-bottom: 0;">
+                                <span>Rp</span>
+                                <input type="number" name="payAmount" placeholder="Jumlah cicilan" max="${loan.totalWithInterest}" required style="width: 100%; padding: 14px 16px; background: transparent; border: none; outline: none; color: white;">
+                            </div>
+                            <button type="submit" class="btn-gradient" style="width: auto; padding: 0 24px; border-radius: 12px; margin: 0; min-width: 100px;">Bayar</button>
+                        </form>
+                    ` : ''}
+                </div>
+            `;
+        });
+        container.innerHTML = html;
+    } catch (err) {
+        console.error("Gagal memuat pinjaman aktif", err);
+        container.innerHTML = '<p style="color: var(--danger); text-align: center;">Gagal memuat data.</p>';
+    }
+}
+
+async function payLoan(e, loanId, maxAmount) {
+    e.preventDefault();
+    const amount = e.target.elements.payAmount.value;
+    
+    if (amount <= 0 || amount > maxAmount) {
+        return alert('Nominal pembayaran tidak valid.');
+    }
+
+    if (!confirm(`Anda akan mencicil pinjaman ini sebesar Rp ${Number(amount).toLocaleString('id-ID')}. Lanjutkan?`)) return;
+
+    try {
+        const res = await fetch(`${API_URL}/loan/pay`, {
+            method: 'POST',
+            headers: { 
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${currentToken}`
+            },
+            body: JSON.stringify({ loanId, amount })
+        });
+        const data = await res.json();
+        
+        if (!res.ok) throw new Error(data.error);
+        
+        alert(data.message);
+        loadActiveLoans(); // Refresh list
+        loadDashboard(); // Refresh balance in background
+    } catch (err) {
+        alert('Pembayaran Gagal: ' + err.message);
+    }
 }

@@ -93,7 +93,10 @@ router.get('/dashboard', authenticate, async (req: any, res: any) => {
     const mappedRecentTxs = recentTxs.map(tx => {
       let mappedType = tx.type;
       if (tx.subtitle && tx.subtitle.includes(`ke ${user.name}`)) {
-        mappedType = 'in';
+        mappedType = 'in'; // Dari perspektif bank itu out, tapi untuk nasabah ini in
+      }
+      if (tx.subtitle && tx.subtitle.includes(`dari ${user.name}`)) {
+        mappedType = 'out'; // Dari perspektif bank itu in, tapi untuk nasabah ini out
       }
       return { ...tx, type: mappedType };
     });
@@ -125,6 +128,9 @@ router.get('/transactions', authenticate, async (req: any, res: any) => {
       let mappedType = tx.type;
       if (tx.subtitle && tx.subtitle.includes(`ke ${user.name}`)) {
         mappedType = 'in';
+      }
+      if (tx.subtitle && tx.subtitle.includes(`dari ${user.name}`)) {
+        mappedType = 'out';
       }
       return { ...tx, type: mappedType };
     });
@@ -258,6 +264,93 @@ router.post('/loan', authenticate, async (req: any, res: any) => {
     });
 
     res.json({ message: 'Pengajuan pinjaman berhasil dibuat (menunggu persetujuan Admin)', data: result });
+  } catch (err: any) {
+    res.status(400).json({ error: err.message });
+  }
+});
+
+// 7. GET ACTIVE LOANS
+router.get('/loan', authenticate, async (req: any, res: any) => {
+  const userId = req.user.id;
+  try {
+    const loans = await prisma.loan.findMany({
+      where: {
+        userId,
+        status: { in: ['pending', 'approved'] }
+      }
+    });
+    res.json(loans);
+  } catch (err: any) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+// 8. POST PAY LOAN
+router.post('/loan/pay', authenticate, async (req: any, res: any) => {
+  const userId = req.user.id;
+  const { loanId, amount } = req.body;
+  const payAmount = Number(amount);
+
+  if (!loanId || payAmount <= 0) return res.status(400).json({ error: 'Input tidak valid' });
+
+  try {
+    const result = await prisma.$transaction(async (tx) => {
+      const user = await tx.user.findUnique({ where: { id: userId } });
+      const loan = await tx.loan.findUnique({ where: { id: loanId } });
+
+      if (!user || !loan) throw new Error('Data tidak ditemukan');
+      if (loan.userId !== userId) throw new Error('Pinjaman bukan milik Anda');
+      if (loan.status !== 'approved') throw new Error('Pinjaman belum dicairkan atau sudah lunas');
+      if (payAmount > loan.totalWithInterest) throw new Error('Pembayaran melebihi sisa tagihan pinjaman');
+      if (user.balance < payAmount) throw new Error('Saldo Anda tidak cukup');
+
+      // Potong saldo pengguna
+      await tx.user.update({
+        where: { id: userId },
+        data: { balance: { decrement: payAmount } }
+      });
+
+      // Kurangi tagihan pinjaman
+      const remainingLoan = loan.totalWithInterest - payAmount;
+      const newStatus = remainingLoan <= 0 ? 'paid' : 'approved';
+
+      const updatedLoan = await tx.loan.update({
+        where: { id: loanId },
+        data: { 
+          totalWithInterest: remainingLoan,
+          status: newStatus
+        }
+      });
+
+      // Update System State (Kembalikan dana ke reserve)
+      const state = await tx.systemState.findUnique({ where: { id: 1 } });
+      if (state) {
+        await tx.systemState.update({
+          where: { id: 1 },
+          data: {
+            circulating: { decrement: payAmount },
+            reserve: { increment: payAmount } // Pelunasan masuk ke reserve bank
+          }
+        });
+      }
+
+      // Catat transaksi pelunasan
+      await tx.transaction.create({
+        data: {
+          id: 'TRX-PAY-' + Date.now(),
+          title: 'Pelunasan Pinjaman',
+          subtitle: `Cicilan dari ${user.name} untuk pinjaman ${loanId}`,
+          type: 'in', // Uang masuk ke Bank (Admin lihat Hijau), tapi Nasabah lihat Merah (dimapping di GET transactions)
+          amount: payAmount,
+          source: 'Nasabah App',
+          status: 'success'
+        }
+      });
+
+      return updatedLoan;
+    });
+
+    res.json({ message: 'Pembayaran pinjaman berhasil', data: result });
   } catch (err: any) {
     res.status(400).json({ error: err.message });
   }

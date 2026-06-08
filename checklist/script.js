@@ -10,6 +10,12 @@ document.addEventListener('DOMContentLoaded', () => {
     };
 
     function loadData() {
+        // Force refresh local storage once to show updated progress automatically
+        if (!sessionStorage.getItem('updated_to_v2')) {
+            localStorage.removeItem('smartbank_checklist');
+            sessionStorage.setItem('updated_to_v2', 'true');
+        }
+
         const savedData = localStorage.getItem('smartbank_checklist');
         if(savedData) {
             appData = JSON.parse(savedData);
