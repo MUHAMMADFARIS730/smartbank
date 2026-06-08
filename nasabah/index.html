@@ -32,6 +32,9 @@
                 <a href="#" class="nav-item" data-target="tagihan">
                     <i class="fas fa-file-invoice-dollar"></i> Tagihan
                 </a>
+                <a href="#" class="nav-item" data-target="loan">
+                    <i class="fas fa-hand-holding-usd"></i> Pinjaman
+                </a>
                 <a href="#" class="nav-item" data-target="history">
                     <i class="fas fa-history"></i> Riwayat Transaksi
                 </a>
@@ -42,7 +45,7 @@
         </aside>
 
         <!-- Main Content -->
-        <main class="main-content">
+        <main class="main-content" id="main-app">
             <!-- Header -->
             <header class="topbar">
                 <div class="search-bar">
@@ -168,7 +171,7 @@
                             <label>Catatan (Opsional)</label>
                             <input type="text" placeholder="Berita transfer">
                         </div>
-                        <button type="button" class="btn-gradient">Lanjutkan Transfer</button>
+                        <button type="submit" class="btn-gradient">Lanjutkan Transfer</button>
                     </form>
                 </div>
             </section>
@@ -267,6 +270,29 @@
                     <i class="fas fa-tools" style="font-size: 4rem; color: var(--text-muted); margin-bottom: 20px;"></i>
                     <h3 style="color: var(--text-main); margin-bottom: 10px; font-size:1.5rem;">Fitur Sedang Dikembangkan</h3>
                     <p style="color: var(--text-muted);">Riwayat detail akan tersedia pada pembaruan berikutnya.</p>
+                </div>
+            </section>
+
+
+
+            <!-- Loan View -->
+            <section id="loan" class="view-section">
+                <div class="page-header">
+                    <h1>Sistem Pinjaman</h1>
+                    <p>Ajukan pinjaman dengan mudah. Limit Rp 100.000 (Bunga 10%)</p>
+                </div>
+                <div class="form-container glass-panel">
+                    <form id="loan-form" class="action-form">
+                        <div class="form-group">
+                            <label>Jumlah Pinjaman (Max: Rp 100.000)</label>
+                            <div class="input-prefix">
+                                <span>Rp</span>
+                                <input type="number" id="loan-amount" placeholder="0" max="100000" required>
+                            </div>
+                            <small style="color: var(--text-muted); display: block; margin-top: 8px;">Total Pengembalian: <strong id="loan-total">Rp 0</strong> (termasuk bunga 10%)</small>
+                        </div>
+                        <button type="submit" class="btn-gradient">Ajukan Pinjaman</button>
+                    </form>
                 </div>
             </section>
 

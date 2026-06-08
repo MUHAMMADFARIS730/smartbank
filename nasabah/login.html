@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="id" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SmartBank - Login Nasabah</title>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body style="display: flex; align-items: center; justify-content: center; min-height: 100vh; background-color: var(--bg-main);">
+    
+    <!-- Auth View (Login) -->
+    <div id="auth-view" class="auth-container active" style="width: 100%;">
+        <div class="glass-panel text-center" style="max-width: 400px; margin: 0 auto; padding: 40px;">
+            <div class="logo-icon" style="font-size: 3rem; color: var(--primary); margin-bottom: 20px;"><i class="fas fa-university"></i></div>
+            <h2>Selamat Datang</h2>
+            <p style="color: var(--text-muted); margin-bottom: 30px;">Masuk untuk mengakses rekening SmartBank Anda</p>
+            
+            <form id="login-form">
+                <div class="form-group" style="text-align: left;">
+                    <label>User ID</label>
+                    <input type="text" id="login-id" placeholder="Contoh: USR-1029" required>
+                </div>
+                <div class="form-group" style="text-align: left;">
+                    <label>Password</label>
+                    <input type="password" id="login-password" placeholder="Masukkan password" required>
+                </div>
+                <div style="display: flex; align-items: center; justify-content: space-between; margin-top: 10px; font-size: 0.9rem;">
+                    <label style="display: flex; align-items: center; cursor: pointer;">
+                        <input type="checkbox" id="remember-me" style="margin-right: 5px;"> Ingat Saya
+                    </label>
+                </div>
+                <button type="submit" class="btn-gradient" style="width: 100%; margin-top: 15px;">Login</button>
+            </form>
+
+            <div style="margin-top: 20px; font-size: 0.9rem;">
+                Belum punya akun? <a href="#" id="show-register" style="color: var(--primary);">Daftar Baru</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Auth View (Register) -->
+    <div id="register-view" class="auth-container" style="display: none; width: 100%;">
+        <div class="glass-panel text-center" style="max-width: 400px; margin: 0 auto; padding: 40px;">
+            <div class="logo-icon" style="font-size: 3rem; color: var(--primary); margin-bottom: 20px;"><i class="fas fa-user-plus"></i></div>
+            <h2>Daftar Nasabah Baru</h2>
+            <p style="color: var(--text-muted); margin-bottom: 30px;">Buat akun SmartBank Anda</p>
+            
+            <form id="register-form">
+                <div class="form-group" style="text-align: left;">
+                    <label>Nama Lengkap</label>
+                    <input type="text" id="reg-name" placeholder="Budi Santoso" required>
+                </div>
+                <div class="form-group" style="text-align: left;">
+                    <label>Password</label>
+                    <input type="password" id="reg-password" placeholder="Buat password" required>
+                </div>
+                <button type="submit" class="btn-gradient" style="width: 100%; margin-top: 10px;">Daftar Sekarang</button>
+            </form>
+
+            <div style="margin-top: 20px; font-size: 0.9rem;">
+                Sudah punya akun? <a href="#" id="show-login" style="color: var(--primary);">Kembali Login</a>
+            </div>
+        </div>
+    </div>
+
+    <script src="auth.js"></script>
+</body>
+</html>

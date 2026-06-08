@@ -20,6 +20,7 @@ model SystemState {
 model User {
   id        String   @id // ex: USR-001
   name      String
+  password  String?
   type      String   // Nasabah, Marketplace, Logistics, etc.
   balance   Float    @default(0)
   status    String   @default("active") // active, blocked
