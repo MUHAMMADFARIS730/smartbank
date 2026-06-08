@@ -65,11 +65,14 @@ async function initApp() {
     const mainApp = document.getElementById('main-app');
     if (mainApp) mainApp.style.display = 'block';
 
-    // Set profile info
+    // Set basic profile info from cache first to avoid flashing
     document.querySelector('.profile-info .name').innerText = currentUser.name;
+    if (currentUser.type) {
+        document.querySelector('.profile-info .role').innerText = currentUser.type + ' Member';
+    }
     document.querySelector('.user-profile img').src = `https://ui-avatars.com/api/?name=${encodeURIComponent(currentUser.name)}&background=3B82F6&color=fff`;
     
-    // Load dashboard
+    // Load dashboard (will overwrite with fresh data from server)
     await loadDashboard();
 }
 
@@ -83,6 +86,16 @@ async function loadDashboard() {
         
         const data = await res.json();
         
+        // Update user profile globally from fresh data
+        currentUser.id = data.id || currentUser.id;
+        currentUser.type = data.type || currentUser.type;
+        localStorage.setItem('smartbank_user', JSON.stringify(currentUser));
+
+        // Update DOM elements
+        document.querySelector('.profile-info .role').innerText = (data.type || 'Regular') + ' Member';
+        document.getElementById('welcome-message').innerText = `Selamat datang kembali, ${data.name.split(' ')[0]}.`;
+        document.getElementById('account-number').innerText = data.id || 'N/A';
+
         // Update balance
         document.querySelector('.balance-card .amount').innerText = `Rp ${data.balance.toLocaleString('id-ID')}`;
         

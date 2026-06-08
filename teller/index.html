@@ -35,9 +35,7 @@
 
     <!-- Main Content Area -->
     <main class="main-content">
-        
-        <!-- Header -->
-        <header>
+        <header class="top-bar">
             <div class="header-title">
                 <h1 id="page-title">Teller Workspace</h1>
                 <p id="page-subtitle">Pusat layanan transaksi perbankan langsung (Walk-in).</p>
@@ -70,7 +68,7 @@
                         <span>Total Transaksi</span>
                         <i class="fa-solid fa-receipt" style="color: var(--primary);"></i>
                     </div>
-                    <div class="stat-value">42</div>
+                    <div class="stat-value" id="teller-total-tx">0</div>
                     <div style="font-size: 0.85rem; color: var(--text-muted); margin-top: 5px;">Shift Berjalan</div>
                 </div>
 
@@ -79,8 +77,8 @@
                         <span>Setoran Diterima (In)</span>
                         <i class="fa-solid fa-arrow-down" style="color: var(--success);"></i>
                     </div>
-                    <div class="stat-value" style="font-size: 1.8rem;">Rp 12.500.000</div>
-                    <div style="font-size: 0.85rem; color: var(--text-muted); margin-top: 5px;">24 Transaksi Setor</div>
+                    <div class="stat-value" style="font-size: 1.8rem;" id="teller-total-in">Rp 0</div>
+                    <div style="font-size: 0.85rem; color: var(--text-muted); margin-top: 5px;">Semua Setoran Tunai</div>
                 </div>
 
                 <div class="glass-card">
@@ -88,8 +86,8 @@
                         <span>Penarikan (Out)</span>
                         <i class="fa-solid fa-arrow-up" style="color: var(--danger);"></i>
                     </div>
-                    <div class="stat-value" style="font-size: 1.8rem;">Rp 4.200.000</div>
-                    <div style="font-size: 0.85rem; color: var(--text-muted); margin-top: 5px;">18 Transaksi Tarik</div>
+                    <div class="stat-value" style="font-size: 1.8rem;" id="teller-total-out">Rp 0</div>
+                    <div style="font-size: 0.85rem; color: var(--text-muted); margin-top: 5px;">Semua Tarik Tunai & Transfer</div>
                 </div>
             </section>
 
@@ -106,23 +104,8 @@
                             <th>Status</th>
                         </tr>
                     </thead>
-                    <tbody>
-                        <tr>
-                            <td>TRX-8821</td>
-                            <td>10:45 WIB</td>
-                            <td>Budi Santoso</td>
-                            <td class="tx-type"><i class="fa-solid fa-arrow-down in"></i> Setor Tunai</td>
-                            <td style="color: var(--success); font-weight: 500;">Rp 500.000</td>
-                            <td><span class="status success">Sukses</span></td>
-                        </tr>
-                        <tr>
-                            <td>TRX-8822</td>
-                            <td>10:50 WIB</td>
-                            <td>Siti Aminah</td>
-                            <td class="tx-type"><i class="fa-solid fa-arrow-up out"></i> Tarik Tunai</td>
-                            <td style="color: var(--danger); font-weight: 500;">Rp 1.200.000</td>
-                            <td><span class="status success">Sukses</span></td>
-                        </tr>
+                    <tbody id="teller-queue-body">
+                        <tr><td colspan="6" style="text-align: center; color: var(--text-muted);">Memuat antrean...</td></tr>
                     </tbody>
                 </table>
             </div>
@@ -261,109 +244,8 @@
                                 <th>Status</th>
                             </tr>
                         </thead>
-                        <tbody>
-                            <tr>
-                                <td>10:50 WIB</td>
-                                <td>TRX-8822</td>
-                                <td>Siti Aminah</td>
-                                <td>Tarik Tunai</td>
-                                <td>-</td>
-                                <td style="color: var(--danger);">Rp 1.200.000</td>
-                                <td><span class="status success">Sukses</span></td>
-                            </tr>
-                            <tr>
-                                <td>10:45 WIB</td>
-                                <td>TRX-8821</td>
-                                <td>Budi Santoso</td>
-                                <td>Setor Tunai</td>
-                                <td style="color: var(--success);">Rp 500.000</td>
-                                <td>-</td>
-                                <td><span class="status success">Sukses</span></td>
-                            </tr>
-                            <tr>
-                                <td>09:30 WIB</td>
-                                <td>TRX-8815</td>
-                                <td>Ahmad Yani</td>
-                                <td>Transfer ke USR-992</td>
-                                <td>-</td>
-                                <td style="color: var(--danger);">Rp 250.000</td>
-                                <td><span class="status success">Sukses</span></td>
-                            </tr>
-                            <tr>
-                                <td>09:05 WIB</td>
-                                <td>TRX-8802</td>
-                                <td>Rina Melati</td>
-                                <td>Setor Tunai</td>
-                                <td style="color: var(--success);">Rp 2.000.000</td>
-                                <td>-</td>
-                                <td><span class="status success">Sukses</span></td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
-                    </tbody>
-                </table>
-            </div>
-        </div>
-
-        <!-- VIEW: RIWAYAT TELLER -->
-        <div id="view-riwayat" class="view-section">
-            <div class="glass-card">
-                <div class="card-label" style="margin-bottom: 1.5rem;">
-                    <span>Riwayat Transaksi Shift Ini</span>
-                    <button style="background: none; border: 1px solid var(--glass-border); color: var(--text-main); padding: 0.5rem 1rem; border-radius: 8px; cursor: pointer;"><i class="fa-solid fa-download"></i> Unduh Laporan</button>
-                </div>
-                
-                <div style="overflow-x: auto;">
-                    <table>
-                        <thead>
-                            <tr>
-                                <th>Waktu</th>
-                                <th>ID Transaksi</th>
-                                <th>Nasabah</th>
-                                <th>Jenis Transaksi</th>
-                                <th>Kredit (Masuk)</th>
-                                <th>Debit (Keluar)</th>
-                                <th>Status</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <td>10:50 WIB</td>
-                                <td>TRX-8822</td>
-                                <td>Siti Aminah</td>
-                                <td>Tarik Tunai</td>
-                                <td>-</td>
-                                <td style="color: var(--danger);">Rp 1.200.000</td>
-                                <td><span class="status success">Sukses</span></td>
-                            </tr>
-                            <tr>
-                                <td>10:45 WIB</td>
-                                <td>TRX-8821</td>
-                                <td>Budi Santoso</td>
-                                <td>Setor Tunai</td>
-                                <td style="color: var(--success);">Rp 500.000</td>
-                                <td>-</td>
-                                <td><span class="status success">Sukses</span></td>
-                            </tr>
-                            <tr>
-                                <td>09:30 WIB</td>
-                                <td>TRX-8815</td>
-                                <td>Ahmad Yani</td>
-                                <td>Transfer ke USR-992</td>
-                                <td>-</td>
-                                <td style="color: var(--danger);">Rp 250.000</td>
-                                <td><span class="status success">Sukses</span></td>
-                            </tr>
-                            <tr>
-                                <td>09:05 WIB</td>
-                                <td>TRX-8802</td>
-                                <td>Rina Melati</td>
-                                <td>Setor Tunai</td>
-                                <td style="color: var(--success);">Rp 2.000.000</td>
-                                <td>-</td>
-                                <td><span class="status success">Sukses</span></td>
-                            </tr>
+                        <tbody id="teller-history-body">
+                            <tr><td colspan="7" style="text-align: center; color: var(--text-muted);">Memuat riwayat...</td></tr>
                         </tbody>
                     </table>
                 </div>

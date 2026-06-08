@@ -218,4 +218,33 @@ router.get('/transactions', async (req, res) => {
   }
 });
 
+// 6. GET /api/teller/dashboard - Get Teller Stats & Queue
+router.get('/dashboard', async (req, res) => {
+  try {
+    const transactions = await prisma.transaction.findMany({
+      where: { source: 'Teller Pusat' },
+      orderBy: { createdAt: 'desc' }
+    });
+
+    const shiftCount = transactions.length;
+    const totalIn = transactions.filter((t: any) => t.type === 'in').reduce((sum: number, t: any) => sum + t.amount, 0);
+    const totalOut = transactions.filter((t: any) => t.type === 'out').reduce((sum: number, t: any) => sum + t.amount, 0);
+    
+    // Antrean / Transaksi Terakhir
+    const recentQueue = transactions.slice(0, 10);
+
+    res.json({
+      stats: {
+        totalTransactions: shiftCount,
+        totalIn: totalIn,
+        totalOut: totalOut
+      },
+      recentQueue
+    });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Internal Server Error' });
+  }
+});
+
 export default router;

@@ -20,8 +20,10 @@ function switchView(viewId, element) {
     };
     document.getElementById('page-title').innerText = titleMap[viewId];
 
-    if (viewId === 'riwayat' || viewId === 'dashboard') {
+    if (viewId === 'riwayat') {
         loadTransactions();
+    } else if (viewId === 'dashboard') {
+        loadTellerDashboard();
     }
 }
 
@@ -238,7 +240,7 @@ async function loadTransactions() {
             `;
         });
         
-        const tableBody = document.querySelector('#view-riwayat tbody');
+        const tableBody = document.getElementById('teller-history-body');
         if (tableBody) tableBody.innerHTML = html;
         
     } catch (error) {
@@ -246,6 +248,47 @@ async function loadTransactions() {
     }
 }
 
+async function loadTellerDashboard() {
+    try {
+        const response = await fetch(`${API_URL}/dashboard`);
+        const data = await response.json();
+
+        // Update Stats
+        document.getElementById('teller-total-tx').innerText = data.stats.totalTransactions;
+        document.getElementById('teller-total-in').innerText = `Rp ${data.stats.totalIn.toLocaleString('id-ID')}`;
+        document.getElementById('teller-total-out').innerText = `Rp ${data.stats.totalOut.toLocaleString('id-ID')}`;
+
+        // Update Queue
+        let queueHtml = '';
+        if (data.recentQueue.length === 0) {
+            queueHtml = '<tr><td colspan="6" style="text-align: center; color: var(--text-muted);">Belum ada antrean / transaksi</td></tr>';
+        } else {
+            data.recentQueue.forEach((trx) => {
+                const isOut = trx.type === 'out';
+                const typeIcon = isOut ? '<i class="fa-solid fa-arrow-up out"></i>' : '<i class="fa-solid fa-arrow-down in"></i>';
+                const amountColor = isOut ? 'var(--danger)' : 'var(--success)';
+                const date = new Date(trx.createdAt).toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' }) + ' WIB';
+
+                queueHtml += `
+                    <tr>
+                        <td>${trx.id.substring(0, 8)}</td>
+                        <td>${date}</td>
+                        <td>${trx.subtitle || 'System'}</td>
+                        <td class="tx-type">${typeIcon} ${trx.title}</td>
+                        <td style="color: ${amountColor}; font-weight: 500;">Rp ${trx.amount.toLocaleString('id-ID')}</td>
+                        <td><span class="status success">Sukses</span></td>
+                    </tr>
+                `;
+            });
+        }
+        const queueBody = document.getElementById('teller-queue-body');
+        if (queueBody) queueBody.innerHTML = queueHtml;
+
+    } catch (error) {
+        console.error('Error fetching teller dashboard:', error);
+    }
+}
+
 document.addEventListener('DOMContentLoaded', () => {
-    loadTransactions();
+    loadTellerDashboard();
 });

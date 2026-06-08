@@ -53,10 +53,24 @@ async function renderDashboard() {
         const circPercentage = ((sys.circulating / sys.totalSupply) * 100).toFixed(1);
         document.getElementById('circulating-percentage').textContent = `${circPercentage}% dari Supply`;
         
+        // Fetch Analytics
+        const resAnalytics = await fetch(`${API_URL}/analytics`);
+        const analyticsData = await resAnalytics.json();
+
         updateDistributionChart(sys);
+        updateMoneyFlowChart(analyticsData.moneyFlow);
+        
         renderLedgerMini(txs);
     } catch (e) {
         console.error("Error fetching dashboard:", e);
+    }
+}
+
+function updateMoneyFlowChart(moneyFlowData) {
+    if(moneyFlowChartInstance && moneyFlowData) {
+        moneyFlowChartInstance.data.labels = moneyFlowData.labels;
+        moneyFlowChartInstance.data.datasets[0].data = moneyFlowData.data;
+        moneyFlowChartInstance.update();
     }
 }
 
@@ -540,10 +554,10 @@ function initCharts() {
         moneyFlowChartInstance = new Chart(ctxFlow, {
             type: 'line',
             data: {
-                labels: ['Sen', 'Sel', 'Rab', 'Kam', 'Jum', 'Sab', 'Min'],
+                labels: [],
                 datasets: [{
                     label: 'Volume Transaksi (Juta Rp)',
-                    data: [120, 190, 150, 220, 180, 280, 250],
+                    data: [],
                     borderColor: '#00f2fe',
                     backgroundColor: 'rgba(0, 242, 254, 0.1)',
                     borderWidth: 2,

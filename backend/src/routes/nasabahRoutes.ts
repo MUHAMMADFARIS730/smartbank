@@ -60,7 +60,7 @@ router.post('/login', async (req, res) => {
     if (!valid) return res.status(401).json({ error: 'ID atau password salah' });
 
     const token = jwt.sign({ id: user.id, name: user.name }, JWT_SECRET, { expiresIn: '1d' });
-    res.json({ message: 'Login berhasil', token, data: { id: user.id, name: user.name } });
+    res.json({ message: 'Login berhasil', token, user: { id: user.id, name: user.name, type: user.type, balance: user.balance } });
   } catch (err: any) {
     res.status(500).json({ error: err.message });
   }
@@ -102,6 +102,8 @@ router.get('/dashboard', authenticate, async (req: any, res: any) => {
     });
 
     res.json({
+      id: user.id,
+      type: user.type,
       balance: user.balance,
       name: user.name,
       recentTransactions: mappedRecentTxs

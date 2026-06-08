@@ -85,6 +85,47 @@ router.get('/dashboard', async (req, res) => {
   }
 });
 
+router.get('/analytics', async (req, res) => {
+  try {
+    const state = await getSystemState();
+    const transactions = await prisma.transaction.findMany({
+      orderBy: { createdAt: 'asc' }
+    });
+
+    // Dummy aggregations for the chart to simulate time series
+    // In a real app, this would group by day/week. For now, we chunk transactions.
+    const moneyFlowLabels = ['Hari 1', 'Hari 2', 'Hari 3', 'Hari 4', 'Hari 5', 'Hari 6', 'Hari 7'];
+    const moneyFlowData = [0, 0, 0, 0, 0, 0, 0];
+    
+    // Distribute transactions across the 7 days roughly based on index
+    transactions.forEach((tx: any, index: number) => {
+        const bucket = Math.floor((index / transactions.length) * 7);
+        if (bucket >= 0 && bucket < 7) {
+            moneyFlowData[bucket] += (tx.amount / 1000000); // Scale down to millions for chart readability
+        }
+    });
+
+    const distributionData = [
+      state.reserve,
+      state.circulating,
+      state.feeAccumulated
+    ];
+
+    res.json({
+      moneyFlow: {
+        labels: moneyFlowLabels,
+        data: moneyFlowData
+      },
+      distribution: {
+        data: distributionData
+      }
+    });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Internal Server Error' });
+  }
+});
+
 router.post('/distribute', async (req, res) => {
   const { amount, targetEntity } = req.body;
   if (!amount || amount <= 0 || !targetEntity) {
