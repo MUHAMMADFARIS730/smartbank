@@ -27,46 +27,9 @@ function switchView(viewId, element) {
     }
 }
 
-// --- Algoritma Greedy ---
-function calculateDenominations(amount) {
-    const denominations = [100000, 50000, 20000, 10000, 5000, 2000, 1000];
-    const result = {};
-
-    for (let coin of denominations) {
-        if (amount >= coin) {
-            const count = Math.floor(amount / coin);
-            result[coin] = count;
-            amount = amount % coin;
-        }
-    }
-    if (amount > 0) result['sisa'] = amount;
-    return result;
-}
-
-// --- Algoritma Merge Sort ---
-function mergeSortTransactions(arr) {
-    if (arr.length <= 1) return arr;
-    const mid = Math.floor(arr.length / 2);
-    const left = arr.slice(0, mid);
-    const right = arr.slice(mid);
-    return merge(mergeSortTransactions(left), mergeSortTransactions(right));
-}
-
-function merge(left, right) {
-    let resultArray = [], leftIndex = 0, rightIndex = 0;
-    while (leftIndex < left.length && rightIndex < right.length) {
-        // Sort descending by timestamp/createdAt
-        if (new Date(left[leftIndex].createdAt).getTime() >= new Date(right[rightIndex].createdAt).getTime()) {
-            resultArray.push(left[leftIndex]);
-            leftIndex++;
-        } else {
-            resultArray.push(right[rightIndex]);
-            rightIndex++;
-        }
-    }
-    return resultArray.concat(left.slice(leftIndex)).concat(right.slice(rightIndex));
-}
-// ------------------------------------------
+// Note: Algoritma Greedy (calculateDenominations) dan Merge Sort (mergeSortTransactions)
+// sekarang dimuat secara modular dari berkas terpisah: algorithms.js
+// -----------------------------------------------------------------------------
 
 // Search Customer
 async function searchCustomer() {
